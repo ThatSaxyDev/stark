@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "297200142197",
+    "project_id": "stark-ca0a8",
+    "storage_bucket": "stark-ca0a8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:297200142197:android:34e6fc4b02efa4c38a353c",
+        "android_client_info": {
+          "package_name": "com.stark.stark"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "297200142197-kk0u0so5fnjksiin8np08nakg29kj1oe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfJc__Wn7SpEGiTU5aELkJ7jfwfOphdRc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "297200142197-kk0u0so5fnjksiin8np08nakg29kj1oe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
