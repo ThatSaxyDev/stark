@@ -221,7 +221,7 @@ class DrawerItem {
 }
 
 List<DrawerItem> drawerItems = [
-  DrawerItem('Overview', 'overview'),
+  DrawerItem('Attendance', 'overview'),
   DrawerItem('Tasks', 'task'),
   DrawerItem('Message', 'message'),
   DrawerItem('Leave Request', 'request'),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:routemaster/routemaster.dart';
+import 'package:stark/features/attendance/views/mark_attendance_view.dart';
 import 'package:stark/features/auth/views/login_view.dart';
 import 'package:stark/features/auth/views/sign_up_view.dart';
 import 'package:stark/features/auth/views/user_type_view.dart';
@@ -32,6 +33,9 @@ final adminLoggedInRoute = RouteMap(
         ),
     '/create-organisation': (_) => const MaterialPage(
           child: CreateOrganisationView(),
+        ),
+    '/mark-attendance': (_) => const MaterialPage(
+          child: MarkAttendanceView(),
         ),
   },
   onUnknownRoute: (path) => const MaterialPage(

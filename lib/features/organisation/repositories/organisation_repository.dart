@@ -8,6 +8,8 @@ import 'package:stark/core/type_defs.dart';
 import 'package:stark/models/organisation_model.dart';
 import 'package:stark/models/user_model.dart';
 
+import '../../../models/attemdance_model.dart';
+
 //! the organisation repo provider
 final organisationsRepositoryProvider = Provider((ref) {
   return OrganisationsRepository(firestore: ref.watch(firestoreProvider));
@@ -36,6 +38,66 @@ class OrganisationsRepository {
     }
   }
 
+  //! create attendance instances
+  FutureVoid createAttendance(
+      AttendanceModel attendance, String orgName) async {
+    try {
+      var organisationDoc = await _organisations.doc(orgName).get();
+
+      Map<String, dynamic>? orgData =
+          organisationDoc.data() as Map<String, dynamic>?;
+
+      OrganisationModel organisation = OrganisationModel.fromMap(orgData!);
+
+      List<Future<void>> futures = [];
+
+      for (var id in organisation.employees) {
+        Future<void> res = _attendance
+            .doc(id)
+            .set(attendance.copyWith(employeeId: id).toMap());
+        futures.add(res);
+      }
+
+      await Future.wait(futures);
+
+      return right(null);
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
+
+  //! mark attendance
+  FutureVoid markAttendance(String employeeId) async {
+    try {
+      return right(_attendance.doc(employeeId).update({
+        'status': 'signed',
+      }));
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
+
+  //! get attendance stream
+  Stream<List<AttendanceModel>> getAttendanceList(String orgName) {
+    return _attendance
+        .where('organisationName', isEqualTo: orgName)
+        .snapshots()
+        .map(
+      (event) {
+        List<AttendanceModel> attendance = [];
+        for (var doc in event.docs) {
+          attendance
+              .add(AttendanceModel.fromMap(doc.data() as Map<String, dynamic>));
+        }
+        return attendance;
+      },
+    );
+  }
+
   //! get managers organisations
   Stream<List<OrganisationModel>> getManagerOrganisations(String uid) {
     return _organisations.where('managers', arrayContains: uid).snapshots().map(
@@ -52,7 +114,10 @@ class OrganisationsRepository {
 
   //! get employees organisations
   Stream<List<OrganisationModel>> getEmployeeOrganisations(String uid) {
-    return _organisations.where('employees', arrayContains: uid).snapshots().map(
+    return _organisations
+        .where('employees', arrayContains: uid)
+        .snapshots()
+        .map(
       (event) {
         List<OrganisationModel> organisations = [];
         for (var doc in event.docs) {
@@ -64,10 +129,27 @@ class OrganisationsRepository {
     );
   }
 
+  //! sack employee
+  FutureVoid sackEmployee({
+    required String organisationName,
+    required String employeeId,
+  }) async {
+    try {
+      await _invites.doc(employeeId).delete();
+      return right(_organisations.doc(organisationName).update({
+        'employees': FieldValue.arrayRemove([employeeId])
+      }));
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
+
   //! get organisation
   Stream<OrganisationModel> getOrganisationByName(String name) {
-    return _organisations.doc(name).snapshots().map(
-        (event) => OrganisationModel.fromMap(event.data() as Map<String, dynamic>));
+    return _organisations.doc(name).snapshots().map((event) =>
+        OrganisationModel.fromMap(event.data() as Map<String, dynamic>));
   }
 
   //! search for employees
@@ -94,8 +176,6 @@ class OrganisationsRepository {
       return employees;
     });
   }
-
-
 
   //! get applicatiions
   // Stream<List<ApplicationModel>> getPendingApplications() {
@@ -175,6 +255,12 @@ class OrganisationsRepository {
   // //
   CollectionReference get _organisations =>
       _firestore.collection(FirebaseConstants.organisationsCollection);
+
+  CollectionReference get _invites =>
+      _firestore.collection(FirebaseConstants.invitesCollection);
+
+  CollectionReference get _attendance =>
+      _firestore.collection(FirebaseConstants.attendanceCollection);
 
   // CollectionReference get _posts =>
   //     _firestore.collection(FirebaseConstants.postsCollection);

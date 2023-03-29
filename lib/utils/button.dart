@@ -122,7 +122,7 @@ class TransparentButton extends StatelessWidget {
               ? Text(
                   text ?? '',
                   style: TextStyle(
-                    color: textColor,
+                    color: textColor ?? Pallete.blackColor,
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w500,
                   ),

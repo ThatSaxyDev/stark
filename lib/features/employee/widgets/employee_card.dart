@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
-import 'package:stark/features/auth/controllers/auth_controller.dart';
 
+import 'package:stark/features/auth/controllers/auth_controller.dart';
+import 'package:stark/features/employee/widgets/remove_employee_bottom_sheet.dart';
+import 'package:stark/features/organisation/controllers/organisation_controller.dart';
 import 'package:stark/models/user_model.dart';
 import 'package:stark/theme/palette.dart';
 import 'package:stark/utils/error_text.dart';
@@ -13,9 +15,11 @@ import 'package:stark/utils/widget_extensions.dart';
 
 class EmployeeCard extends ConsumerWidget {
   final String employeeUid;
+  final String orgaName;
   const EmployeeCard({
     super.key,
     required this.employeeUid,
+    required this.orgaName,
   });
 
   @override
@@ -65,7 +69,21 @@ class EmployeeCard extends ConsumerWidget {
                       ),
                       const Spacer(),
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          showModalBottomSheet(
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            context: context,
+                            builder: (context) => Wrap(
+                              children: [
+                                RemoveEmployeeBottomSheet(
+                                  employeeFirstName: employee.firstName,
+                                  orgaName: orgaName,
+                                )
+                              ],
+                            ),
+                          );
+                        },
                         icon: const Icon(
                           PhosphorIcons.signOutBold,
                           color: Pallete.thickRed,
@@ -103,7 +121,7 @@ class EmployeeCard extends ConsumerWidget {
                   25.sbH,
                   Row(
                     children: [
-                    const Icon(PhosphorIcons.envelope),
+                      const Icon(PhosphorIcons.envelope),
                       7.sbW,
                       Text(
                         employee.email,
@@ -118,7 +136,7 @@ class EmployeeCard extends ConsumerWidget {
                   10.sbH,
                   Row(
                     children: [
-                      Icon(PhosphorIcons.phone), 
+                      Icon(PhosphorIcons.phone),
                       7.sbW,
                       Text(
                         '08028068097731',

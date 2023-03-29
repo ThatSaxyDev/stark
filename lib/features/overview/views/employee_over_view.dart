@@ -28,7 +28,7 @@ class _EmployeeOverViewState extends ConsumerState<EmployeeOverView> {
     final organisationsStream = ref.watch(getEmployeeOrganisationsProvider);
 
     return Scaffold(
-      appBar: const MyAppBar(title: 'Overview'),
+      appBar: const MyAppBar(title: ''),
       body: organisationsStream.when(
         data: (organisations) {
           if (organisations.isEmpty) {

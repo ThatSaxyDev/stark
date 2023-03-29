@@ -3,7 +3,7 @@ class FirebaseConstants {
   static const organisationsCollection = 'organisations';
   static const tasksCollection = 'tasks';
   static const invitesCollection = 'invites';
-  static const adminCollection = 'admin';
+  static const attendanceCollection = 'attendance';
   static const approvalCollection = 'approvals';
   static const bookmarksCollection = 'bookmarks';
   static const verificationCollection = 'verifications';

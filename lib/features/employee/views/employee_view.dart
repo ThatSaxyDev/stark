@@ -169,6 +169,7 @@ class EmployeeView extends ConsumerWidget {
                           itemBuilder: (context, index) {
                             return EmployeeCard(
                               employeeUid: organisations[0].employees[index],
+                              orgaName: organisations[0].name,
                             );
                           },
                         ),

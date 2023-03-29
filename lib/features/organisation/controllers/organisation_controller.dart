@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
@@ -5,6 +7,7 @@ import 'package:stark/core/constants/constants.dart';
 import 'package:stark/core/providers/storage_repository_provider.dart';
 import 'package:stark/features/auth/controllers/auth_controller.dart';
 import 'package:stark/features/organisation/repositories/organisation_repository.dart';
+import 'package:stark/models/attemdance_model.dart';
 import 'package:stark/models/organisation_model.dart';
 import 'package:stark/utils/snack_bar.dart';
 
@@ -13,6 +16,13 @@ final getOrganisationByNameProvider = StreamProvider.family((ref, String name) {
   return ref
       .watch(organisationsControllerProvider.notifier)
       .getOrganisationByName(name);
+});
+
+//! provider to get attendance
+final getAttendanceStreamProvider = StreamProvider((ref) {
+  final organisationController =
+      ref.watch(organisationsControllerProvider.notifier);
+  return organisationController.getAttendanceList();
 });
 
 //! get manager organisations provider
@@ -80,6 +90,57 @@ class OrganisationController extends StateNotifier<bool> {
     );
   }
 
+  //! create attendance instance
+  void createAttendance(
+    BuildContext context,
+  ) async {
+    String orgName = '';
+
+    state = true;
+
+    final ress = _ref.watch(getManagerOrganisationsProvider);
+    ress.whenData((organisation) => orgName = organisation[0].name);
+
+    AttendanceModel attendance = AttendanceModel(
+      timeIn: null,
+      status: 'notsigned',
+      organisationName: orgName,
+      employeeId: '',
+    );
+
+    final res =
+        await _organisationsRepository.createAttendance(attendance, orgName);
+
+    state = false;
+
+    res.fold(
+      (failure) => showSnackBar(context, failure.message),
+      (success) {
+        showSnackBar(context, 'Attendance created successfully');
+        // Navigate to another page or refresh the current page.
+      },
+    );
+  }
+
+  //! mark attendance
+  void markAttendance(BuildContext context, String employeeId) async {
+    state = true;
+    final res = await _organisationsRepository.markAttendance(employeeId);
+    state = false;
+    res.fold(
+      (l) => showSnackBar(context, 'An error occurred while signing'),
+      (r) => showSnackBar(context, 'Signed!'),
+    );
+  }
+
+  //! get attendance stream
+  Stream<List<AttendanceModel>> getAttendanceList() {
+    String orgName = '';
+    final ress = _ref.watch(getManagerOrganisationsProvider);
+    ress.whenData((organisation) => orgName = organisation[0].name);
+    return _organisationsRepository.getAttendanceList(orgName);
+  }
+
   //! get manager organisations
   Stream<List<OrganisationModel>> getManagerOrganisations() {
     final uid = _ref.read(userProvider)!.uid;
@@ -95,6 +156,29 @@ class OrganisationController extends StateNotifier<bool> {
   //! get an organisation by name
   Stream<OrganisationModel> getOrganisationByName(String name) {
     return _organisationsRepository.getOrganisationByName(name);
+  }
+
+  //! sack employee
+  void sackEmployee(
+      {required BuildContext context,
+      required String employeeId,
+      required String orgName}) async {
+    // String orgName = '';
+    state = true;
+    // final ress = _ref.watch(getManagerOrganisationsProvider);
+    // ress.whenData((organisation) => orgName = organisation[0].name);
+
+    final res = await _organisationsRepository.sackEmployee(
+        organisationName: orgName, employeeId: employeeId);
+    state = false;
+
+    res.fold(
+      (failure) => showSnackBar(context, failure.message),
+      (success) {
+        showSnackBar(context, 'Sacked!');
+        Routemaster.of(context).pop();
+      },
+    );
   }
 
   // //! approve application to create community
