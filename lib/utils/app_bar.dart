@@ -8,6 +8,8 @@ import 'package:stark/theme/palette.dart';
 import 'package:stark/utils/string_extensions.dart';
 import 'package:stark/utils/widget_extensions.dart';
 
+import '../features/auth/controllers/auth_controller.dart';
+
 class MyAppBar extends ConsumerWidget implements PreferredSizeWidget {
   final String? title;
   const MyAppBar({
@@ -17,6 +19,7 @@ class MyAppBar extends ConsumerWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userProvider)!;
     return AppBar(
       backgroundColor: Colors.transparent,
       foregroundColor: Pallete.blackish,
@@ -47,6 +50,7 @@ class MyAppBar extends ConsumerWidget implements PreferredSizeWidget {
         11.sbW,
         CircleAvatar(
           radius: 16.w,
+          backgroundImage: NetworkImage(user.profilePic),
         ),
         20.sbW,
       ],

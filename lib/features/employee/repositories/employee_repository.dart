@@ -21,8 +21,11 @@ class EmployeeRepository {
   }) : _firestore = firestore;
 
   //! send invitation to employee
-  FutureVoid sendInvite(InviteModel invite) async {
+  FutureVoid sendInvite(InviteModel invite, String orgName) async {
     try {
+      _organisations.doc(orgName).update({
+        'prospectiveEmployees': FieldValue.arrayUnion([invite.receiverId])
+      });
       return right(_invites.doc(invite.receiverId).set(invite.toMap()));
     } on FirebaseException catch (e) {
       throw e.message!;
@@ -40,6 +43,56 @@ class EmployeeRepository {
         .map((event) => event.docs
             .map((e) => InviteModel.fromMap(e.data() as Map<String, dynamic>))
             .toList());
+  }
+
+  //! get particular invite model
+  Stream<InviteModel> getInViteModel({required String receiverId}) {
+    return _invites.doc(receiverId).snapshots().map(
+        (event) => InviteModel.fromMap(event.data() as Map<String, dynamic>));
+  }
+
+  //! get stream of invites for employee
+  Stream<List<InviteModel>> getInvitesForEmployee(
+      {required String employeeId}) {
+    return _invites
+        .where('receiverId', isEqualTo: employeeId)
+        // .orderBy('actionAt', descending: true)
+        .snapshots()
+        .map((event) => event.docs
+            .map((e) => InviteModel.fromMap(e.data() as Map<String, dynamic>))
+            .toList());
+  }
+
+  //! reject invitaion
+  FutureVoid rejectInvite(InviteModel invite) async {
+    try {
+      _organisations.doc(invite.organisationName).update({
+        'prospectiveEmployees': FieldValue.arrayRemove([invite.receiverId])
+      });
+      return right(_invites.doc(invite.receiverId).delete());
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
+
+  FutureVoid acceptInvite(InviteModel invite) async {
+    try {
+      _invites.doc(invite.receiverId).update({
+        'status': 'accepted',
+      });
+      _organisations.doc(invite.organisationName).update({
+        'prospectiveEmployees': FieldValue.arrayRemove([invite.receiverId])
+      });
+      return right(_organisations.doc(invite.organisationName).update({
+        'employees': FieldValue.arrayUnion([invite.receiverId]),
+      }));
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
   }
 
   //! search for employees
@@ -69,6 +122,9 @@ class EmployeeRepository {
 
   CollectionReference get _invites =>
       _firestore.collection(FirebaseConstants.invitesCollection);
+
+  CollectionReference get _organisations =>
+      _firestore.collection(FirebaseConstants.organisationsCollection);
 
   CollectionReference get _users =>
       _firestore.collection(FirebaseConstants.usersCollection);

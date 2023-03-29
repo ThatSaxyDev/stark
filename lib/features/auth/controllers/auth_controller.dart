@@ -12,6 +12,13 @@ import 'package:stark/models/user_model.dart';
 
 import '../../../utils/snack_bar.dart';
 
+
+//! provider to generate user model from ID
+final getUserProvider = StreamProvider.family((ref, String uid) {
+  final authController = ref.watch(authControllerProvider.notifier);
+  return authController.getUserData(uid);
+});
+
 //! the auth controller proviider
 final authControllerProvider = StateNotifierProvider<AuthController, bool>(
   (ref) => AuthController(

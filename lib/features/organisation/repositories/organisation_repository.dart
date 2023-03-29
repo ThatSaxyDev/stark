@@ -6,6 +6,7 @@ import 'package:stark/core/failure.dart';
 import 'package:stark/core/providers/firebase_provider.dart';
 import 'package:stark/core/type_defs.dart';
 import 'package:stark/models/organisation_model.dart';
+import 'package:stark/models/user_model.dart';
 
 //! the organisation repo provider
 final organisationsRepositoryProvider = Provider((ref) {
@@ -48,6 +49,53 @@ class OrganisationsRepository {
       },
     );
   }
+
+  //! get employees organisations
+  Stream<List<OrganisationModel>> getEmployeeOrganisations(String uid) {
+    return _organisations.where('employees', arrayContains: uid).snapshots().map(
+      (event) {
+        List<OrganisationModel> organisations = [];
+        for (var doc in event.docs) {
+          organisations.add(
+              OrganisationModel.fromMap(doc.data() as Map<String, dynamic>));
+        }
+        return organisations;
+      },
+    );
+  }
+
+  //! get organisation
+  Stream<OrganisationModel> getOrganisationByName(String name) {
+    return _organisations.doc(name).snapshots().map(
+        (event) => OrganisationModel.fromMap(event.data() as Map<String, dynamic>));
+  }
+
+  //! search for employees
+  Stream<List<UserModel>> searchForEmployees(String query) {
+    return _organisations
+        .where(
+          'email',
+          isGreaterThanOrEqualTo: query.isEmpty ? 0 : query.toLowerCase(),
+          isLessThan: query.isEmpty
+              ? null
+              : query.substring(0, query.length - 1) +
+                  String.fromCharCode(
+                    query.codeUnitAt(query.length - 1) + 1,
+                  ),
+        )
+        // .where('isAdmin', isEqualTo: false)
+        .snapshots()
+        .map((event) {
+      List<UserModel> employees = [];
+      for (var employee in event.docs) {
+        employees
+            .add(UserModel.fromMap(employee.data() as Map<String, dynamic>));
+      }
+      return employees;
+    });
+  }
+
+
 
   //! get applicatiions
   // Stream<List<ApplicationModel>> getPendingApplications() {

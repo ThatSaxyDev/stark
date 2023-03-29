@@ -63,6 +63,7 @@ dependencies:
   unicons: ^2.1.1
 
 dev_dependencies:
+  flutter_launcher_icons: ^0.12.0
   simple_animations: ^5.0.0+3
   flutter_test:
     sdk: flutter
@@ -78,6 +79,15 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter packages.
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/appicon/starkiconn.png"
+  web:
+    generate: true
+    image_path: "assets/appicon/starkiconn.png"
+    background_color: "#FFFFFF"
+    theme_color: "#FFFFFF"
 flutter:
 
   # The following line ensures that the Material Icons font is

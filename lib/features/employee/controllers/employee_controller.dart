@@ -9,6 +9,13 @@ import 'package:stark/models/user_model.dart';
 
 import '../../../utils/snack_bar.dart';
 
+//! provider to get invite by receiver Id
+final getInviteByIdProvider = StreamProvider.family((ref, String receiverId) {
+  return ref
+      .watch(employeeControllerProvider.notifier)
+      .getInViteModel(receiverId);
+});
+
 //! the search for employees provider to invite
 final searchEmployeeToInviteProvider =
     StreamProvider.family((ref, String query) {
@@ -19,9 +26,14 @@ final searchEmployeeToInviteProvider =
 
 //! the get invites for manager provider
 final getInvitesForManagerProvider = StreamProvider((ref) {
-  final employeeController =
-      ref.watch(employeeControllerProvider.notifier);
+  final employeeController = ref.watch(employeeControllerProvider.notifier);
   return employeeController.getInvitesForManager();
+});
+
+//! the get invites for employee provider
+final getInvitesForEmployeeProvider = StreamProvider((ref) {
+  final employeeController = ref.watch(employeeControllerProvider.notifier);
+  return employeeController.getInvitesForEmployee();
 });
 
 //! the notifier provider
@@ -67,7 +79,7 @@ class EmployeeController extends StateNotifier<bool> {
       status: 'pending',
     );
 
-    final res = await _employeeRepository.sendInvite(invite);
+    final res = await _employeeRepository.sendInvite(invite, organisationName);
 
     state = false;
 
@@ -80,14 +92,43 @@ class EmployeeController extends StateNotifier<bool> {
     );
   }
 
+  //! reject invite
+  void rejectInvite(InviteModel invite, BuildContext context) async {
+    final res = await _employeeRepository.rejectInvite(invite);
+    res.fold(
+      (l) => null,
+      (r) => showSnackBar(context, 'Invitation Rejected!'),
+    );
+  }
+
+  //! accept invite
+  void acceptInvite(InviteModel invite, BuildContext context) async {
+    final res = await _employeeRepository.acceptInvite(invite);
+    res.fold(
+      (l) => null,
+      (r) => showSnackBar(context, 'Invitation Accepted!'),
+    );
+  }
+
+  //! get an invite moder
+  Stream<InviteModel> getInViteModel(String receiverId) {
+    return _employeeRepository.getInViteModel(receiverId: receiverId);
+  }
+
   //! search for employees
   Stream<List<UserModel>> searchForEmployeesToInvite(String query) {
     return _employeeRepository.searchForEmployeesToInvite(query);
   }
 
-  //! get streams of invites
+  //! get streams of invites for managers
   Stream<List<InviteModel>> getInvitesForManager() {
     final user = _ref.read(userProvider)!;
     return _employeeRepository.getInvitesForManager(managerId: user.uid);
+  }
+
+  //! get streams of invites for employees
+  Stream<List<InviteModel>> getInvitesForEmployee() {
+    final user = _ref.read(userProvider)!;
+    return _employeeRepository.getInvitesForEmployee(employeeId: user.uid);
   }
 }

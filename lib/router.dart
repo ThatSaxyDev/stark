@@ -46,4 +46,7 @@ final employeeLoggedInRoute = RouteMap(
           child: EmployeeBaseDrawerWrapper(),
         ),
   },
+  onUnknownRoute: (path) => const MaterialPage(
+    child: EmployeeBaseDrawerWrapper(),
+  ),
 );

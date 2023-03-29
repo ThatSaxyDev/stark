@@ -8,11 +8,25 @@ import 'package:stark/features/organisation/repositories/organisation_repository
 import 'package:stark/models/organisation_model.dart';
 import 'package:stark/utils/snack_bar.dart';
 
-//! get manger organisations provider
+//! provider to get org by name
+final getOrganisationByNameProvider = StreamProvider.family((ref, String name) {
+  return ref
+      .watch(organisationsControllerProvider.notifier)
+      .getOrganisationByName(name);
+});
+
+//! get manager organisations provider
 final getManagerOrganisationsProvider = StreamProvider((ref) {
   final organisationController =
       ref.watch(organisationsControllerProvider.notifier);
   return organisationController.getManagerOrganisations();
+});
+
+//! get employee organisations provider
+final getEmployeeOrganisationsProvider = StreamProvider((ref) {
+  final organisationController =
+      ref.watch(organisationsControllerProvider.notifier);
+  return organisationController.getEmployeeOrganisations();
 });
 
 //! the organization controller provider
@@ -51,7 +65,8 @@ class OrganisationController extends StateNotifier<bool> {
       avatar: Constants.communityAvatarDefault,
       description: '',
       managers: [user.uid],
-      employees: [user.uid],
+      employees: [],
+      prospectiveEmployees: [],
     );
 
     final res = await _organisationsRepository.createOrganisation(organisation);
@@ -69,6 +84,17 @@ class OrganisationController extends StateNotifier<bool> {
   Stream<List<OrganisationModel>> getManagerOrganisations() {
     final uid = _ref.read(userProvider)!.uid;
     return _organisationsRepository.getManagerOrganisations(uid);
+  }
+
+  //! get employee organisations
+  Stream<List<OrganisationModel>> getEmployeeOrganisations() {
+    final uid = _ref.read(userProvider)!.uid;
+    return _organisationsRepository.getEmployeeOrganisations(uid);
+  }
+
+  //! get an organisation by name
+  Stream<OrganisationModel> getOrganisationByName(String name) {
+    return _organisationsRepository.getOrganisationByName(name);
   }
 
   // //! approve application to create community

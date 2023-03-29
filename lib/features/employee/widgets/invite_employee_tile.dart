@@ -36,6 +36,7 @@ class InviteEmployeeTile extends ConsumerWidget {
     final isLoading = ref.watch(employeeControllerProvider);
     final organisationsStream = ref.watch(getManagerOrganisationsProvider);
     final invitesStream = ref.watch(getInvitesForManagerProvider);
+    final getInviteModelStream = ref.watch(getInviteByIdProvider(uid));
 
     void invite(String organisationName) {
       ref.read(employeeControllerProvider.notifier).sendInvite(
@@ -107,20 +108,42 @@ class InviteEmployeeTile extends ConsumerWidget {
                 return isLoading
                     ? const Loader()
                     : invitesStream.when(
-                        data: (invites) => invites.isEmpty
-                            ? BButton(
+                        data: (invites) => organisations[0]
+                                .prospectiveEmployees
+                                .contains(uid) || organisations[0]
+                                .employees
+                                .contains(uid)
+                            ? getInviteModelStream.when(
+                                data: (invit) {
+                                  return Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 5.w, vertical: 3.h),
+                                    decoration: BoxDecoration(
+                                      color: invit.status == 'pending'
+                                          ? Pallete.orange
+                                          : Colors.green,
+                                      borderRadius: BorderRadius.circular(5.r),
+                                    ),
+                                    child: Text(
+                                      invit.status.toUpperCase(),
+                                      style: TextStyle(
+                                        color: Pallete.whiteColor,
+                                        fontSize: 13.sp,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                error: (error, stackTrace) =>
+                                    ErrorText(error: error.toString()),
+                                loading: () => const Loader(),
+                              )
+                            : BButton(
                                 height: 30.h,
                                 width: 100.w,
                                 onTap: () => invite(organisations[0].name),
                                 color: Pallete.primaryGreen,
                                 text: '+ invite',
-                              )
-                            : Text(
-                                invites[0].status,
-                                style: TextStyle(
-                                  fontSize: 13.sp,
-                                  fontWeight: FontWeight.w400,
-                                ),
                               ),
                         error: (error, stackTrace) =>
                             ErrorText(error: error.toString()),
