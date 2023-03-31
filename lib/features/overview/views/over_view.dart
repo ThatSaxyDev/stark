@@ -1,8 +1,10 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:routemaster/routemaster.dart';
+import 'package:stark/features/attendance/controllers/attendance_controller.dart';
 import 'package:stark/features/auth/controllers/auth_controller.dart';
 import 'package:stark/features/organisation/controllers/organisation_controller.dart';
 import 'package:stark/models/attemdance_model.dart';
@@ -100,61 +102,71 @@ class _OverViewState extends ConsumerState<OverView> {
                   15.sbH,
                   Align(
                     alignment: Alignment.center,
-                    child: InkWell(
-                      onTap: () => ref
-                          .read(organisationsControllerProvider.notifier)
-                          .createAttendance(context),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 10.w, vertical: 7.h),
-                            decoration: BoxDecoration(
-                              color: Pallete.primaryGreen,
-                              borderRadius: BorderRadius.circular(10.r),
-                            ),
-                            child: Text(
-                              organisations[0].name.toUpperCase(),
-                              style: TextStyle(
-                                color: Pallete.whiteColor,
-                                fontSize: 17.sp,
-                                fontWeight: FontWeight.w500,
-                              ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10.w, vertical: 7.h),
+                          decoration: BoxDecoration(
+                            color: Pallete.primaryGreen,
+                            borderRadius: BorderRadius.circular(10.r),
+                          ),
+                          child: Text(
+                            organisations[0].name.toUpperCase(),
+                            style: TextStyle(
+                              color: Pallete.whiteColor,
+                              fontSize: 17.sp,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
-                          TransparentButton(
-                            width: 150.w,
-                            height: 50.h,
-                            onTap: () => navigateToMarkAttendance(context),
-                            color: Pallete.greyColor,
-                            isText: false,
-                            item: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Text(
-                                  'Attendance',
-                                  style: TextStyle(
-                                    color: Pallete.blackTint,
-                                    fontSize: 19.sp,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                Icon(
-                                  Icons.arrow_forward_ios_outlined,
+                        ),
+                        TransparentButton(
+                          width: 150.w,
+                          height: 50.h,
+                          onTap: () => navigateToMarkAttendance(context),
+                          color: Pallete.greyColor,
+                          isText: false,
+                          item: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Text(
+                                'Attendance',
+                                style: TextStyle(
                                   color: Pallete.blackTint,
-                                  size: 19.sp,
+                                  fontSize: 19.sp,
+                                  fontWeight: FontWeight.w500,
                                 ),
-                              ],
-                            ),
+                              ),
+                              Icon(
+                                Icons.arrow_forward_ios_outlined,
+                                color: Pallete.blackTint,
+                                size: 19.sp,
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                   20.sbH,
 
-                  //! attendance button
+                  //! pie chart
+                  SizedBox.square(
+                    dimension: 60.h,
+                    child: PieChart(PieChartData(
+                        centerSpaceRadius: 100,
+                        centerSpaceColor: Colors.yellow,
+                        borderData: FlBorderData(show: false),
+                        sections: [
+                          PieChartSectionData(value: 10, color: Colors.blue),
+                          PieChartSectionData(value: 10, color: Colors.orange),
+                          PieChartSectionData(value: 10, color: Colors.red),
+                          PieChartSectionData(value: 10, color: Colors.purple),
+                          PieChartSectionData(value: 20, color: Colors.amber),
+                          PieChartSectionData(value: 30, color: Colors.green)
+                        ])),
+                  ),
                 ],
               ),
         error: (error, stackTrace) => ErrorText(error: error.toString()),

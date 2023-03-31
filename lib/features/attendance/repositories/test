@@ -1,0 +1,62 @@
+FutureVoid markAttendance(String employeeId, String orgName) async {
+    try {
+      var attendanceDoc =
+          await _attendanceRecords.doc(DateTime.now().toString()).get();
+      if (attendanceDoc.exists) {
+        //! check if its before 9 am
+        if (DateTime.now().isBefore(DateTime(DateTime.now().year,
+            DateTime.now().month, DateTime.now().day, 9))) {
+          _attendanceRecords.doc(DateTime.now().toString()).update({
+            'present': FieldValue.arrayUnion([employeeId]),
+            'early': FieldValue.arrayUnion([employeeId]),
+          });
+        } else {
+          _attendanceRecords.doc(DateTime.now().toString()).update({
+            'present': FieldValue.arrayUnion([employeeId]),
+            'late': FieldValue.arrayUnion([employeeId]),
+          });
+        }
+      }
+
+      var organisationDoc = await _organisations.doc(orgName).get();
+
+      Map<String, dynamic>? orgData =
+          organisationDoc.data() as Map<String, dynamic>?;
+
+      OrganisationModel organisation = OrganisationModel.fromMap(orgData!);
+
+      AttendanceRecordModel attendanceRecord = AttendanceRecordModel(
+        day: DateTime.now(),
+        organisationName: organisation.name,
+        early: [],
+        late: [],
+        present: [],
+        absent: [],
+      );
+      _attendanceRecords
+          .doc(DateTime.now().toString())
+          .set(attendanceRecord.toMap());
+
+//! check if its before 9 am
+      if (DateTime.now().isBefore(DateTime(
+          DateTime.now().year, DateTime.now().month, DateTime.now().day, 9))) {
+        _attendanceRecords.doc(DateTime.now().toString()).update({
+          'present': FieldValue.arrayUnion([employeeId]),
+          'early': FieldValue.arrayUnion([employeeId]),
+        });
+      } else {
+        _attendanceRecords.doc(DateTime.now().toString()).update({
+          'present': FieldValue.arrayUnion([employeeId]),
+          'late': FieldValue.arrayUnion([employeeId]),
+        });
+      }
+
+      return right(_attendance.doc(employeeId).update({
+        'status': 'signed',
+      }));
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }

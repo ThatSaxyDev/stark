@@ -61,6 +61,7 @@ dependencies:
   timeago: ^3.3.0
   hidden_drawer_menu: ^3.0.1
   unicons: ^2.1.1
+  fl_chart: ^0.61.0
 
 dev_dependencies:
   flutter_launcher_icons: ^0.12.0

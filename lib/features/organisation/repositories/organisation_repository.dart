@@ -38,66 +38,6 @@ class OrganisationsRepository {
     }
   }
 
-  //! create attendance instances
-  FutureVoid createAttendance(
-      AttendanceModel attendance, String orgName) async {
-    try {
-      var organisationDoc = await _organisations.doc(orgName).get();
-
-      Map<String, dynamic>? orgData =
-          organisationDoc.data() as Map<String, dynamic>?;
-
-      OrganisationModel organisation = OrganisationModel.fromMap(orgData!);
-
-      List<Future<void>> futures = [];
-
-      for (var id in organisation.employees) {
-        Future<void> res = _attendance
-            .doc(id)
-            .set(attendance.copyWith(employeeId: id).toMap());
-        futures.add(res);
-      }
-
-      await Future.wait(futures);
-
-      return right(null);
-    } on FirebaseException catch (e) {
-      throw e.message!;
-    } catch (e) {
-      return left(Failure(e.toString()));
-    }
-  }
-
-  //! mark attendance
-  FutureVoid markAttendance(String employeeId) async {
-    try {
-      return right(_attendance.doc(employeeId).update({
-        'status': 'signed',
-      }));
-    } on FirebaseException catch (e) {
-      throw e.message!;
-    } catch (e) {
-      return left(Failure(e.toString()));
-    }
-  }
-
-  //! get attendance stream
-  Stream<List<AttendanceModel>> getAttendanceList(String orgName) {
-    return _attendance
-        .where('organisationName', isEqualTo: orgName)
-        .snapshots()
-        .map(
-      (event) {
-        List<AttendanceModel> attendance = [];
-        for (var doc in event.docs) {
-          attendance
-              .add(AttendanceModel.fromMap(doc.data() as Map<String, dynamic>));
-        }
-        return attendance;
-      },
-    );
-  }
-
   //! get managers organisations
   Stream<List<OrganisationModel>> getManagerOrganisations(String uid) {
     return _organisations.where('managers', arrayContains: uid).snapshots().map(

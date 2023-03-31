@@ -18,12 +18,7 @@ final getOrganisationByNameProvider = StreamProvider.family((ref, String name) {
       .getOrganisationByName(name);
 });
 
-//! provider to get attendance
-final getAttendanceStreamProvider = StreamProvider((ref) {
-  final organisationController =
-      ref.watch(organisationsControllerProvider.notifier);
-  return organisationController.getAttendanceList();
-});
+
 
 //! get manager organisations provider
 final getManagerOrganisationsProvider = StreamProvider((ref) {
@@ -90,57 +85,7 @@ class OrganisationController extends StateNotifier<bool> {
     );
   }
 
-  //! create attendance instance
-  void createAttendance(
-    BuildContext context,
-  ) async {
-    String orgName = '';
-
-    state = true;
-
-    final ress = _ref.watch(getManagerOrganisationsProvider);
-    ress.whenData((organisation) => orgName = organisation[0].name);
-
-    AttendanceModel attendance = AttendanceModel(
-      timeIn: null,
-      status: 'notsigned',
-      organisationName: orgName,
-      employeeId: '',
-    );
-
-    final res =
-        await _organisationsRepository.createAttendance(attendance, orgName);
-
-    state = false;
-
-    res.fold(
-      (failure) => showSnackBar(context, failure.message),
-      (success) {
-        showSnackBar(context, 'Attendance created successfully');
-        // Navigate to another page or refresh the current page.
-      },
-    );
-  }
-
-  //! mark attendance
-  void markAttendance(BuildContext context, String employeeId) async {
-    state = true;
-    final res = await _organisationsRepository.markAttendance(employeeId);
-    state = false;
-    res.fold(
-      (l) => showSnackBar(context, 'An error occurred while signing'),
-      (r) => showSnackBar(context, 'Signed!'),
-    );
-  }
-
-  //! get attendance stream
-  Stream<List<AttendanceModel>> getAttendanceList() {
-    String orgName = '';
-    final ress = _ref.watch(getManagerOrganisationsProvider);
-    ress.whenData((organisation) => orgName = organisation[0].name);
-    return _organisationsRepository.getAttendanceList(orgName);
-  }
-
+  
   //! get manager organisations
   Stream<List<OrganisationModel>> getManagerOrganisations() {
     final uid = _ref.read(userProvider)!.uid;

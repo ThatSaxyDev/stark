@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:stark/features/attendance/controllers/attendance_controller.dart';
 import 'package:stark/features/auth/controllers/auth_controller.dart';
 import 'package:stark/features/organisation/controllers/organisation_controller.dart';
+import 'package:stark/features/timer/timerr.dart';
 import 'package:stark/theme/palette.dart';
 import 'package:stark/utils/app_bar.dart';
 import 'package:stark/utils/button.dart';
@@ -10,13 +13,46 @@ import 'package:stark/utils/error_text.dart';
 import 'package:stark/utils/loader.dart';
 import 'package:stark/utils/widget_extensions.dart';
 
-class MarkAttendanceView extends ConsumerWidget {
+class MarkAttendanceView extends ConsumerStatefulWidget {
   const MarkAttendanceView({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _MarkAttendanceViewState();
+}
+
+class _MarkAttendanceViewState extends ConsumerState<MarkAttendanceView> {
+  // @override
+  // void initState() {
+  //   // TODO: implement initState
+  //   super.initState();
+  // }
+
+  @override
+  Widget build(BuildContext context) {
     final attendanceStream = ref.watch(getAttendanceStreamProvider);
+    final attendanceStreamSigned = ref.watch(getAttendanceSignedStreamProvider);
+    // final currentTime = ref.watch(timeNotifierProvider.notifier);
+    // if (currentTime.hour == 12 &&
+    //     currentTime.minute == 0 &&
+    //     currentTime.second == 0) {
+    //   ref.read(myFunctionProvider);
+    // }
     return Scaffold(
+      floatingActionButton: attendanceStreamSigned.when(
+        data: (signed) {
+          if (signed.isNotEmpty) {
+            return FloatingActionButton(
+              onPressed: () => ref
+                  .read(attendanceControllerProvider.notifier)
+                  .createAttendance(context),
+              child: Icon(PhosphorIcons.repeatBold),
+            );
+          }
+        },
+        error: (error, stackTrace) => ErrorText(error: error.toString()),
+        loading: () => const Loader(),
+      ),
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -32,7 +68,26 @@ class MarkAttendanceView extends ConsumerWidget {
       body: attendanceStream.when(
         data: (attendance) {
           if (attendance.isEmpty) {
-            return const ErrorText(error: 'No attendance available');
+            return attendanceStreamSigned.when(
+              data: (signed) {
+                if (signed.isNotEmpty) {
+                  return ErrorText(error: 'All employees signed');
+                }
+
+                return Center(
+                  child: BButton(
+                    color: Pallete.primaryGreen,
+                    onTap: () => ref
+                        .read(attendanceControllerProvider.notifier)
+                        .createAttendance(context),
+                    width: 300.w,
+                    text: 'Open Attendance For Today',
+                  ),
+                );
+              },
+              error: (error, stackTrace) => ErrorText(error: error.toString()),
+              loading: () => const Loader(),
+            );
           }
 
           return ListView.builder(
@@ -96,7 +151,7 @@ class MarkAttendanceView extends ConsumerWidget {
                                 TransparentButton(
                                   onTap: () {
                                     ref
-                                        .read(organisationsControllerProvider
+                                        .read(attendanceControllerProvider
                                             .notifier)
                                         .markAttendance(
                                             context, employee.employeeId);
