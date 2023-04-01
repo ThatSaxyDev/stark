@@ -58,7 +58,7 @@ class TaskProjectController extends StateNotifier<bool> {
       name: name,
       employeeIds: [],
       taskIds: [],
-      status: '',
+      status: 'ongoing',
       type: '',
       endDateTime: endDateTime,
       startDateTime: DateTime.now(),
