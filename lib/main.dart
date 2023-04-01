@@ -15,6 +15,7 @@ import 'package:stark/utils/loader.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
+    name: 'myApp',
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(
@@ -27,7 +28,7 @@ void main() async {
 class MyApp extends ConsumerStatefulWidget {
   const MyApp({super.key});
 
-  @override
+  @override 
   ConsumerState<ConsumerStatefulWidget> createState() => _MyAppState();
 }
 

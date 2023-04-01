@@ -6,7 +6,7 @@ import 'package:hidden_drawer_menu/hidden_drawer_menu.dart';
 import 'package:stark/features/auth/controllers/auth_controller.dart';
 import 'package:stark/features/employee/views/employee_view.dart';
 import 'package:stark/features/profile/views/profile_view.dart';
-import 'package:stark/features/tasks/views/tasks_view.dart';
+import 'package:stark/features/tasks_projects/views/tasks_view.dart';
 import 'package:stark/features/overview/views/over_view.dart';
 import 'package:stark/theme/palette.dart';
 import 'package:stark/utils/string_extensions.dart';
@@ -27,6 +27,9 @@ class BaseDrawerWrapper extends StatelessWidget {
             break;
           case 1:
             screenCurrent = const EmployeeView();
+            break;
+          case 2:
+            screenCurrent = const TasksView();
             break;
           case 9:
             screenCurrent = const ProfileView();

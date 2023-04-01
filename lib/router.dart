@@ -7,6 +7,7 @@ import 'package:stark/features/auth/views/user_type_view.dart';
 import 'package:stark/features/base_drawer_wrapper/views/base_drawer_wrapper.dart';
 import 'package:stark/features/base_drawer_wrapper/views/employee_base_drawer_wrapper.dart';
 import 'package:stark/features/organisation/views/create_organisation_view.dart';
+import 'package:stark/features/tasks_projects/views/create_project_view.dart';
 
 //! these routes would be desplayed when the user is logged out
 final loggedOutRoute = RouteMap(
@@ -36,6 +37,9 @@ final adminLoggedInRoute = RouteMap(
         ),
     '/mark-attendance': (_) => const MaterialPage(
           child: MarkAttendanceView(),
+        ),
+    '/create-project': (_) => const MaterialPage(
+          child: CreateProjectView(),
         ),
   },
   onUnknownRoute: (path) => const MaterialPage(

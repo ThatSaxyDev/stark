@@ -17,6 +17,19 @@ final getAttendanceStreamProvider = StreamProvider((ref) {
   return attendanceController.getAttendanceList();
 });
 
+//! provider to get attendance record
+final getAttendanceRecordProvider = StreamProvider((ref) {
+  final attendanceController = ref.watch(attendanceControllerProvider.notifier);
+  return attendanceController.getAttendanceRecord();
+});
+
+//! provider to get attendance records list
+final getAttendanceRecordListProvider =
+    StreamProvider.family((ref, DateTime date) {
+  final attendanceController = ref.watch(attendanceControllerProvider.notifier);
+  return attendanceController.getListAttendanceRecords(date);
+});
+
 //! provider to get signed attendance
 final getAttendanceSignedStreamProvider = StreamProvider((ref) {
   final attendanceController = ref.watch(attendanceControllerProvider.notifier);
@@ -135,11 +148,24 @@ class AttendanceController extends StateNotifier<bool> {
     return _attendanceRepository.getAttendanceList(orgName);
   }
 
+  //! get attendance record for partiular days
+  Stream<List<AttendanceRecordModel>> getListAttendanceRecords(DateTime date) {
+    String orgName = '';
+    final ress = _ref.watch(getManagerOrganisationsProvider);
+    ress.whenData((organisation) => orgName = organisation[0].name);
+    return _attendanceRepository.getListAttendanceRecords(orgName, date);
+  }
+
   //! get attendance signed stream
   Stream<List<AttendanceModel>> getAttendanceListSigned() {
     String orgName = '';
     final ress = _ref.watch(getManagerOrganisationsProvider);
     ress.whenData((organisation) => orgName = organisation[0].name);
     return _attendanceRepository.getAttendanceListSigned(orgName);
+  }
+
+  //! get attendance record
+  Stream<AttendanceRecordModel> getAttendanceRecord() {
+    return _attendanceRepository.getAttendanceRecord();
   }
 }

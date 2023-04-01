@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -70,6 +72,7 @@ class _OverViewState extends ConsumerState<OverView> {
             Column(
                 children: [
                   10.sbH,
+
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Padding(
@@ -149,24 +152,144 @@ class _OverViewState extends ConsumerState<OverView> {
                       ],
                     ),
                   ),
-                  20.sbH,
+                  10.sbH,
+                  //! TODO: implement pie chart
 
-                  //! pie chart
-                  SizedBox.square(
-                    dimension: 60.h,
-                    child: PieChart(PieChartData(
-                        centerSpaceRadius: 100,
-                        centerSpaceColor: Colors.yellow,
-                        borderData: FlBorderData(show: false),
-                        sections: [
-                          PieChartSectionData(value: 10, color: Colors.blue),
-                          PieChartSectionData(value: 10, color: Colors.orange),
-                          PieChartSectionData(value: 10, color: Colors.red),
-                          PieChartSectionData(value: 10, color: Colors.purple),
-                          PieChartSectionData(value: 20, color: Colors.amber),
-                          PieChartSectionData(value: 30, color: Colors.green)
-                        ])),
+                  // //! pie chart
+                  // SizedBox.square(
+                  //   dimension: 60.h,
+                  //   child: PieChart(
+                  //     PieChartData(
+                  //       centerSpaceRadius: 50.h,
+                  //       borderData: FlBorderData(show: false),
+                  //       sections: [
+                  //         PieChartSectionData(value: 10, color: Colors.blue),
+                  //         PieChartSectionData(value: 10, color: Colors.orange),
+                  //         PieChartSectionData(value: 10, color: Colors.red),
+
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
+                  Text(
+                    organisations[0].employees.length == 1
+                        ? 'Total ${organisations[0].employees.length.toString()} employee'
+                        : 'Total ${organisations[0].employees.length.toString()} employees',
+                    style: TextStyle(
+                      color: Pallete.blackColor,
+                      fontSize: 17.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
+                  20.sbH,
+                  //! metrics
+                  ref.watch(getAttendanceRecordProvider).when(
+                        data: (data) {
+                          String orgName = '';
+                          organisationsStream
+                              .whenData((value) => orgName = value[0].name);
+                          if (data.organisationName == orgName) {
+                            return Column(
+                              children: [
+                                Padding(
+                                  padding: 35.padH,
+                                  child: Row(
+                                    children: [
+                                      //! present
+                                      Row(
+                                        children: [
+                                          CircleAvatar(
+                                            radius: 5.w,
+                                            backgroundColor: Colors.green,
+                                          ),
+                                          10.sbW,
+                                          Text(
+                                            'Present ${data.present.length}',
+                                            style: TextStyle(
+                                              color: Pallete.blackColor,
+                                              fontSize: 15.sp,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const Spacer(),
+                                      //! early
+                                      Row(
+                                        children: [
+                                          CircleAvatar(
+                                            radius: 5.w,
+                                            backgroundColor: Colors.purple,
+                                          ),
+                                          10.sbW,
+                                          Text(
+                                            'Early ${data.early.length}',
+                                            style: TextStyle(
+                                              color: Pallete.blackColor,
+                                              fontSize: 15.sp,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                32.sbH,
+                                Padding(
+                                  padding: 35.padH,
+                                  child: Row(
+                                    children: [
+                                      //! present
+                                      Row(
+                                        children: [
+                                          CircleAvatar(
+                                            radius: 5.w,
+                                            backgroundColor: Colors.red,
+                                          ),
+                                          10.sbW,
+                                          Text(
+                                            'Absent ${data.absent.length}',
+                                            style: TextStyle(
+                                              color: Pallete.blackColor,
+                                              fontSize: 15.sp,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const Spacer(),
+                                      //! early
+                                      Row(
+                                        children: [
+                                          CircleAvatar(
+                                            radius: 5.w,
+                                            backgroundColor: Colors.orange,
+                                          ),
+                                          10.sbW,
+                                          Text(
+                                            'Late ${data.late.length}',
+                                            style: TextStyle(
+                                              color: Pallete.blackColor,
+                                              fontSize: 15.sp,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            );
+                          }
+
+                          return const SizedBox.shrink();
+                        },
+                        error: (error, stackTrace) =>
+                            ErrorText(error: error.toString()),
+                        loading: () => const Loader(),
+                      ),
                 ],
               ),
         error: (error, stackTrace) => ErrorText(error: error.toString()),

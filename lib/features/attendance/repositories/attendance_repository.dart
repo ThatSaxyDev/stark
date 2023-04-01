@@ -175,6 +175,25 @@ class AttendanceRepository {
             event.data() as Map<String, dynamic>));
   }
 
+  //! get attendance record for partiular days
+  Stream<List<AttendanceRecordModel>> getListAttendanceRecords(
+      String orgName, DateTime date) {
+    return _attendanceRecords
+        .where('organisationName', isEqualTo: orgName)
+        .where('date', isEqualTo: date)
+        .snapshots()
+        .map(
+      (event) {
+        List<AttendanceRecordModel> attendanceRecord = [];
+        for (var doc in event.docs) {
+          attendanceRecord.add(AttendanceRecordModel.fromMap(
+              doc.data() as Map<String, dynamic>));
+        }
+        return attendanceRecord;
+      },
+    );
+  }
+
   //! fire this at 12pm
   //! clear attendance sign in for the day
   FutureVoid clearAttendance(String employeeId) async {
