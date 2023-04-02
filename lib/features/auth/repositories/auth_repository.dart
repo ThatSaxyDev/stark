@@ -55,6 +55,7 @@ class AuthRepository {
           profilePic: Constants.avatarDefault,
           email: userCredential.user!.email ?? email,
           isAdmin: isAdmin,
+          organisation: '',
         );
         await _users.doc(userCredential.user!.uid).set(userModel.toMap());
       } else {

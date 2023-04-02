@@ -9,6 +9,7 @@ import 'package:routemaster/routemaster.dart';
 import 'package:stark/features/attendance/controllers/attendance_controller.dart';
 import 'package:stark/features/auth/controllers/auth_controller.dart';
 import 'package:stark/features/organisation/controllers/organisation_controller.dart';
+import 'package:stark/features/tasks_projects/controllers/task_project_controller.dart';
 import 'package:stark/models/attemdance_model.dart';
 import 'package:stark/theme/palette.dart';
 import 'package:stark/utils/app_bar.dart';
@@ -36,10 +37,19 @@ class _OverViewState extends ConsumerState<OverView> {
     Routemaster.of(context).push('/mark-attendance');
   }
 
+  int getNumberOfProjectsDoneNumber(projects) {
+    return projects.where((project) => project.status == 'done').length;
+  }
+
+  int getNumberOfTProjectsProgressNumber(projects) {
+    return projects.where((project) => project.status == 'ongoing').length;
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(userProvider)!;
     final organisationsStream = ref.watch(getManagerOrganisationsProvider);
+    final projectsStream = ref.watch(getProjectsForOrganisationsProvider);
     return Scaffold(
       appBar: const MyAppBar(
         title: 'Overview',
@@ -290,6 +300,178 @@ class _OverViewState extends ConsumerState<OverView> {
                             ErrorText(error: error.toString()),
                         loading: () => const Loader(),
                       ),
+                  const Spacer(),
+                  //! projects over view
+                  projectsStream.when(
+                    data: (projects) {
+                      if (projects.isEmpty) {
+                        return const SizedBox.shrink();
+                      }
+
+                      int done = getNumberOfProjectsDoneNumber(projects);
+                      int ongoing =
+                          getNumberOfTProjectsProgressNumber(projects);
+
+                      return Container(
+                        height: 270.h,
+                        width: double.infinity,
+                        padding: EdgeInsets.symmetric(horizontal: 15.w)
+                            .copyWith(top: 20.h),
+                        decoration: BoxDecoration(
+                          color: Pallete.primaryGreen.withOpacity(0.1),
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20.r),
+                            topRight: Radius.circular(20.r),
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Project Overview',
+                              style: TextStyle(
+                                color: Pallete.blackColor,
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            10.sbH,
+                            //! project number
+                            Row(
+                              children: [
+                                Text(
+                                  projects.length.toString(),
+                                  style: TextStyle(
+                                    color: Pallete.blackColor,
+                                    fontSize: 40.sp,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                10.sbW,
+                                Text(
+                                  projects.length == 1
+                                      ? 'Projects'
+                                      : 'Projects',
+                                  style: TextStyle(
+                                    color: Pallete.blackColor.withOpacity(0.4),
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            24.sbH,
+                            //! doings for the metrics
+                            SizedBox(
+                              height: 80.h,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    flex: ongoing,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Container(
+                                          width: double.infinity,
+                                          height: 11.h,
+                                          color: Pallete.progressGrey,
+                                        ),
+                                        Text(
+                                          'Ongoing',
+                                          style: TextStyle(
+                                            color: Pallete.blackColor
+                                                .withOpacity(0.6),
+                                            fontSize: 16.sp,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                        Row(
+                                          children: [
+                                            Container(
+                                              height: 10.h,
+                                              width: 10.h,
+                                              decoration: BoxDecoration(
+                                                  color: Pallete.progressGrey,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          3.r)),
+                                            ),
+                                            8.sbW,
+                                            Text(
+                                              ongoing.toString(),
+                                              style: TextStyle(
+                                                color: Pallete.blackColor,
+                                                fontSize: 20.sp,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  8.sbW,
+                                  Expanded(
+                                    flex: done,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Container(
+                                          width: double.infinity,
+                                          height: 11.h,
+                                          color: Colors.green.shade800,
+                                        ),
+                                        Text(
+                                          'Completed',
+                                          style: TextStyle(
+                                            color: Pallete.blackColor
+                                                .withOpacity(0.6),
+                                            fontSize: 16.sp,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                        Row(
+                                          children: [
+                                            Container(
+                                              height: 10.h,
+                                              width: 10.h,
+                                              decoration: BoxDecoration(
+                                                  color: Colors.green.shade800,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          3.r)),
+                                            ),
+                                            8.sbW,
+                                            Text(
+                                              done.toString(),
+                                              style: TextStyle(
+                                                color: Pallete.blackColor,
+                                                fontSize: 20.sp,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                    error: (error, stackTrace) =>
+                        ErrorText(error: error.toString()),
+                    loading: () => const Loader(),
+                  ),
                 ],
               ),
         error: (error, stackTrace) => ErrorText(error: error.toString()),

@@ -8,6 +8,7 @@ class UserModel {
   final String profilePic;
   final String email;
   final bool isAdmin;
+  final String organisation;
   const UserModel({
     required this.uid,
     required this.firstName,
@@ -15,6 +16,7 @@ class UserModel {
     required this.profilePic,
     required this.email,
     required this.isAdmin,
+    required this.organisation,
   });
 
   UserModel copyWith({
@@ -24,6 +26,7 @@ class UserModel {
     String? profilePic,
     String? email,
     bool? isAdmin,
+    String? organisation,
   }) {
     return UserModel(
       uid: uid ?? this.uid,
@@ -32,6 +35,7 @@ class UserModel {
       profilePic: profilePic ?? this.profilePic,
       email: email ?? this.email,
       isAdmin: isAdmin ?? this.isAdmin,
+      organisation: organisation ?? this.organisation,
     );
   }
 
@@ -43,6 +47,7 @@ class UserModel {
       'profilePic': profilePic,
       'email': email,
       'isAdmin': isAdmin,
+      'organisation': organisation,
     };
   }
 
@@ -54,6 +59,7 @@ class UserModel {
       profilePic: (map["profilePic"] ?? '') as String,
       email: (map["email"] ?? '') as String,
       isAdmin: (map["isAdmin"] ?? false) as bool,
+      organisation: (map["organisation"] ?? '') as String,
     );
   }
 
@@ -63,7 +69,7 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel(uid: $uid, firstName: $firstName, lastName: $lastName, profilePic: $profilePic, email: $email, isAdmin: $isAdmin)';
+    return 'UserModel(uid: $uid, firstName: $firstName, lastName: $lastName, profilePic: $profilePic, email: $email, isAdmin: $isAdmin, organisation: $organisation)';
   }
 
   @override
@@ -76,7 +82,8 @@ class UserModel {
       other.lastName == lastName &&
       other.profilePic == profilePic &&
       other.email == email &&
-      other.isAdmin == isAdmin;
+      other.isAdmin == isAdmin &&
+      other.organisation == organisation;
   }
 
   @override
@@ -86,6 +93,7 @@ class UserModel {
       lastName.hashCode ^
       profilePic.hashCode ^
       email.hashCode ^
-      isAdmin.hashCode;
+      isAdmin.hashCode ^
+      organisation.hashCode;
   }
 }

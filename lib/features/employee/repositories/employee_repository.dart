@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
@@ -93,6 +95,23 @@ class EmployeeRepository {
     } catch (e) {
       return left(Failure(e.toString()));
     }
+  }
+
+  //! stream of employees
+  Stream<List<UserModel>> getEmployees(String orgName) {
+    return _users
+        .where('organisation', isEqualTo: orgName)
+        .where('isAdmin', isEqualTo: false)
+        .snapshots()
+        .map((event) {
+      List<UserModel> employees = [];
+      for (var employee in event.docs) {
+        employees
+            .add(UserModel.fromMap(employee.data() as Map<String, dynamic>));
+      }
+      log(employees.length.toString());
+      return employees;
+    });
   }
 
   //! search for employees

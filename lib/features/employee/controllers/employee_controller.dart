@@ -1,9 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:stark/core/providers/storage_repository_provider.dart';
 import 'package:stark/features/auth/controllers/auth_controller.dart';
 import 'package:stark/features/employee/repositories/employee_repository.dart';
+import 'package:stark/features/organisation/controllers/organisation_controller.dart';
 import 'package:stark/models/invite_model.dart';
 import 'package:stark/models/user_model.dart';
 
@@ -14,6 +17,12 @@ final getInviteByIdProvider = StreamProvider.family((ref, String receiverId) {
   return ref
       .watch(employeeControllerProvider.notifier)
       .getInViteModel(receiverId);
+});
+
+//! provider to get employees
+final getEmployeesProvider = StreamProvider((ref) {
+  final employeeController = ref.watch(employeeControllerProvider.notifier);
+  return employeeController.getEmployees();
 });
 
 //! the search for employees provider to invite
@@ -113,6 +122,14 @@ class EmployeeController extends StateNotifier<bool> {
   //! get an invite moder
   Stream<InviteModel> getInViteModel(String receiverId) {
     return _employeeRepository.getInViteModel(receiverId: receiverId);
+  }
+
+  //! stream of employees
+  Stream<List<UserModel>> getEmployees() {
+    String orgName = '';
+    final ress = _ref.watch(getManagerOrganisationsProvider);
+    ress.whenData((organisation) => orgName = organisation[0].name);
+    return _employeeRepository.getEmployees(orgName);
   }
 
   //! search for employees

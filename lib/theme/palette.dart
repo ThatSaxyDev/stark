@@ -33,6 +33,7 @@ class Pallete {
   static const textGreen = Color(0xff4E6139);
   static const blueColor = Color(0xff034DC6);
   static const newblueColor = Color(0xff1B2559);
+  static const progressGrey = Color(0xff657EA5);
   // Themes
   static var darkModeAppTheme = ThemeData.dark().copyWith(
     // textTheme: GoogleFonts.spaceGroteskTextTheme(),
