@@ -5,6 +5,7 @@ import 'package:stark/core/constants/firebase_constants.dart';
 import 'package:stark/core/failure.dart';
 import 'package:stark/core/providers/firebase_provider.dart';
 import 'package:stark/core/type_defs.dart';
+import 'package:stark/models/org_message_model.dart';
 import 'package:stark/models/organisation_model.dart';
 import 'package:stark/models/user_model.dart';
 
@@ -22,12 +23,17 @@ class OrganisationsRepository {
       : _firestore = firestore;
 
   //! create organisation
-  FutureVoid createOrganisation(OrganisationModel organisation) async {
+  FutureVoid createOrganisation(
+      OrganisationModel organisation, String uid) async {
     try {
       var organisationDoc = await _organisations.doc(organisation.name).get();
       if (organisationDoc.exists) {
         throw 'Organisation with the same name exists';
       }
+
+      _users.doc(uid).update({
+        'organisation': organisation.name,
+      });
 
       return right(
           _organisations.doc(organisation.name).set(organisation.toMap()));
@@ -37,6 +43,25 @@ class OrganisationsRepository {
       return left(Failure(e.toString()));
     }
   }
+
+  //! create message group
+  FutureVoid createMessageGroup(OrgMessagingModel orgMessaging) async {
+    try {
+      var orgMessagingDoc = await _organisations.doc(orgMessaging.name).get();
+      if (orgMessagingDoc.exists) {
+        throw 'Group with the same name exists';
+      }
+
+      return right(
+          _messageGroup.doc(orgMessaging.name).set(orgMessaging.toMap()));
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
+
+  //! get org messaging group
 
   //! get managers organisations
   Stream<List<OrganisationModel>> getManagerOrganisations(String uid) {
@@ -117,81 +142,6 @@ class OrganisationsRepository {
     });
   }
 
-  //! get applicatiions
-  // Stream<List<ApplicationModel>> getPendingApplications() {
-  //   return _approvals
-  //       .where('approvalStatus', isEqualTo: 'pending')
-  //       .orderBy('createdAt', descending: true)
-  //       .snapshots()
-  //       .map((event) => event.docs
-  //           .map((e) =>
-  //               ApplicationModel.fromMap(e.data() as Map<String, dynamic>))
-  //           .toList());
-  // }
-
-  // //! give approval
-  // FutureVoid giveApproval(ApplicationModel application) async {
-  //   try {
-  //     return right(_approvals
-  //         .doc(application.communityName)
-  //         .update({'approvalStatus': 'approved'}));
-  //   } on FirebaseException catch (e) {
-  //     throw e.message!;
-  //   } catch (e) {
-  //     return left(Failure(e.toString()));
-  //   }
-  // }
-
-  // //! reject application
-  // FutureVoid rejectApplication(ApplicationModel application) async {
-  //   try {
-  //     return right(_approvals
-  //         .doc(application.communityName)
-  //         .update({'approvalStatus': 'rejected'}));
-  //   } on FirebaseException catch (e) {
-  //     throw e.message!;
-  //   } catch (e) {
-  //     return left(Failure(e.toString()));
-  //   }
-  // }
-
-  // //! add applicant to community
-  // FutureVoid addApplicantToCommunity(
-  //     ApplicationModel application, List<String> uids) async {
-  //   try {
-  //     return right(_approvals.doc(application.communityName).update({
-  //       'mods': uids,
-  //       'members': uids,
-  //     }));
-  //   } on FirebaseException catch (e) {
-  //     throw e.message!;
-  //   } catch (e) {
-  //     return left(Failure(e.toString()));
-  //   }
-  // }
-
-  // Stream<List<ApplicationModel>> getApprovedApplications() {
-  //   return _approvals
-  //       .where('approvalStatus', isEqualTo: 'approved')
-  //       .orderBy('createdAt', descending: true)
-  //       .snapshots()
-  //       .map((event) => event.docs
-  //           .map((e) =>
-  //               ApplicationModel.fromMap(e.data() as Map<String, dynamic>))
-  //           .toList());
-  // }
-
-  // Stream<List<ApplicationModel>> getRejectedApplications() {
-  //   return _approvals
-  //       .where('approvalStatus', isEqualTo: 'rejected')
-  //       .orderBy('createdAt', descending: true)
-  //       .snapshots()
-  //       .map((event) => event.docs
-  //           .map((e) =>
-  //               ApplicationModel.fromMap(e.data() as Map<String, dynamic>))
-  //           .toList());
-  // }
-
   // //
   CollectionReference get _organisations =>
       _firestore.collection(FirebaseConstants.organisationsCollection);
@@ -199,12 +149,9 @@ class OrganisationsRepository {
   CollectionReference get _invites =>
       _firestore.collection(FirebaseConstants.invitesCollection);
 
-  CollectionReference get _attendance =>
-      _firestore.collection(FirebaseConstants.attendanceCollection);
+  CollectionReference get _users =>
+      _firestore.collection(FirebaseConstants.usersCollection);
 
-  // CollectionReference get _posts =>
-  //     _firestore.collection(FirebaseConstants.postsCollection);
-
-  // CollectionReference get _approvals =>
-  //     _firestore.collection(FirebaseConstants.approvalCollection);
+  CollectionReference get _messageGroup =>
+      _firestore.collection(FirebaseConstants.messageGroupCollection);
 }

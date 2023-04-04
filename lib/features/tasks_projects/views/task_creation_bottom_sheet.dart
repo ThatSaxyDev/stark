@@ -58,251 +58,253 @@ class _TaskCreationBottomSheetState
       child: employeesStream.when(
         data: (employees) {
           selectedEmployeeId.value = employees[selectedEmployeeIndex.value].uid;
-          return Column(
-            children: [
-              //! create task, close
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  24.sbH,
-                  Row(
-                    children: [
-                      SvgPicture.asset('send'.svg),
-                      11.sbW,
-                      Text(
-                        'Create Task',
-                        style: TextStyle(
-                            color: Pallete.blackTint,
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w600),
-                      ),
-                    ],
-                  ),
-                  InkWell(
-                    onTap: () => Routemaster.of(context).pop(),
-                    child: Container(
-                      color: Colors.transparent,
-                      height: 24.h,
-                      width: 24.w,
-                      child: Icon(
-                        PhosphorIcons.x,
-                        size: 20.sp,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              34.sbH,
-              //! PROJECT NAME
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Row(
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                //! create task, close
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Project: ',
-                        style: TextStyle(
-                            color: Pallete.blackTint,
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w500),
-                      ),
+                    24.sbH,
+                    Row(
+                      children: [
+                        SvgPicture.asset('send'.svg),
+                        11.sbW,
+                        Text(
+                          'Create Task',
+                          style: TextStyle(
+                              color: Pallete.blackTint,
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ],
                     ),
-                    12.sbH,
-                    Text(
-                      widget.projectName,
-                      style: TextStyle(
-                          color: Pallete.blackTint,
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.w800),
+                    InkWell(
+                      onTap: () => Routemaster.of(context).pop(),
+                      child: Container(
+                        color: Colors.transparent,
+                        height: 24.h,
+                        width: 24.w,
+                        child: Icon(
+                          PhosphorIcons.x,
+                          size: 20.sp,
+                        ),
+                      ),
                     ),
                   ],
                 ),
-              ),
-              12.sbH,
-              //! inputs
-              //! employee
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Select Employee',
-                  style: TextStyle(
-                      color: Pallete.blackTint,
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w500),
+                34.sbH,
+                //! PROJECT NAME
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Row(
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Project: ',
+                          style: TextStyle(
+                              color: Pallete.blackTint,
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                      12.sbH,
+                      Text(
+                        widget.projectName,
+                        style: TextStyle(
+                            color: Pallete.blackTint,
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.w800),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              12.sbH,
-              //! employee select
-              ValueListenableBuilder(
-                valueListenable: selectedEmployeeIndex,
-                child: const SizedBox.shrink(),
-                builder: (context, value, child) {
-                  return InkWell(
-                    onTap: () => showPicker(
-                      context,
-                      CupertinoPicker(
-                        scrollController: FixedExtentScrollController(
-                            initialItem: selectedEmployeeIndex.value),
-                        magnification: 1,
-                        squeeze: 1.2,
-                        useMagnifier: false,
-                        itemExtent: 32,
-                        onSelectedItemChanged: (int selectedEmployee) {
-                          // setState(() {
-                          selectedEmployeeIndex.value = selectedEmployee;
-                          log('${selectedEmployeeId.value} 1');
-                          selectedEmployeeId.value =
-                              employees[selectedEmployeeIndex.value].uid;
-
-                          // });
-                        },
-                        children: List<Widget>.generate(
-                          employees.length,
-                          (index) => Text(
-                            '${employees[index].firstName} ${employees[index].lastName}',
-                            style: const TextStyle(
-                                overflow: TextOverflow.ellipsis),
+                12.sbH,
+                //! inputs
+                //! employee
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Select Employee',
+                    style: TextStyle(
+                        color: Pallete.blackTint,
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w500),
+                  ),
+                ),
+                12.sbH,
+                //! employee select
+                ValueListenableBuilder(
+                  valueListenable: selectedEmployeeIndex,
+                  child: const SizedBox.shrink(),
+                  builder: (context, value, child) {
+                    return InkWell(
+                      onTap: () => showPicker(
+                        context,
+                        CupertinoPicker(
+                          scrollController: FixedExtentScrollController(
+                              initialItem: selectedEmployeeIndex.value),
+                          magnification: 1,
+                          squeeze: 1.2,
+                          useMagnifier: false,
+                          itemExtent: 32,
+                          onSelectedItemChanged: (int selectedEmployee) {
+                            // setState(() {
+                            selectedEmployeeIndex.value = selectedEmployee;
+                            log('${selectedEmployeeId.value} 1');
+                            selectedEmployeeId.value =
+                                employees[selectedEmployeeIndex.value].uid;
+          
+                            // });
+                          },
+                          children: List<Widget>.generate(
+                            employees.length,
+                            (index) => Text(
+                              '${employees[index].firstName} ${employees[index].lastName}',
+                              style: const TextStyle(
+                                  overflow: TextOverflow.ellipsis),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    child: Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 7.w, vertical: 10.h),
-                      decoration: BoxDecoration(
-                        color: Pallete.blueColor,
-                        borderRadius: BorderRadius.circular(5.r),
-                      ),
-                      child: Center(
-                        child: Wrap(
-                          // mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(
-                              '${employees[selectedEmployeeIndex.value].firstName} ${employees[selectedEmployeeIndex.value].lastName}',
-                              style: TextStyle(
-                                color: Pallete.whiteColor,
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.w500,
+                      child: Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 7.w, vertical: 10.h),
+                        decoration: BoxDecoration(
+                          color: Pallete.blueColor,
+                          borderRadius: BorderRadius.circular(5.r),
+                        ),
+                        child: Center(
+                          child: Wrap(
+                            // mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                '${employees[selectedEmployeeIndex.value].firstName} ${employees[selectedEmployeeIndex.value].lastName}',
+                                style: TextStyle(
+                                  color: Pallete.whiteColor,
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
-                            ),
-                            10.sbW,
-                            const Icon(
-                              Icons.keyboard_arrow_down,
-                              color: Pallete.whiteColor,
-                            ),
-                          ],
+                              10.sbW,
+                              const Icon(
+                                Icons.keyboard_arrow_down,
+                                color: Pallete.whiteColor,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                },
-              ),
-              20.sbH,
-              //! task name input
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Task Name',
-                  style: TextStyle(
-                      color: Pallete.blackTint,
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w500),
+                    );
+                  },
                 ),
-              ),
-              12.sbH,
-              TextField(
-                // inputFormatters: [
-                //   FilteringTextInputFormatter.deny(RegExp(' '))
-                // ],
-                controller: _taskNameController,
-                // onChanged: (value) {
-                //   _nameController.value = TextEditingValue(
-                //       text: value.toLowerCase(),
-                //       selection: _nameController.selection);
-                // },
-                decoration: InputDecoration(
-                    hintText: 'Task Name',
-                    hintStyle: TextStyle(fontSize: 15.sp),
-                    filled: true,
-                    fillColor: Pallete.greey.withOpacity(0.3),
-                    border: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.transparent),
-                      borderRadius: BorderRadius.circular(10.r),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.transparent),
-                      borderRadius: BorderRadius.circular(10.r),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.transparent),
-                      borderRadius: BorderRadius.circular(10.r),
-                    ),
-                    contentPadding: EdgeInsets.all(18.w)),
-                maxLength: 21,
-              ),
-              20.sbH,
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Task Description',
-                  style: TextStyle(
-                      color: Pallete.blackTint,
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w500),
+                20.sbH,
+                //! task name input
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Task Name',
+                    style: TextStyle(
+                        color: Pallete.blackTint,
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w500),
+                  ),
                 ),
-              ),
-              12.sbH,
-
-              //! description
-              TextField(
-                controller: _descriptionController,
-                decoration: InputDecoration(
-                    hintText: 'Type something...',
-                    hintStyle: TextStyle(fontSize: 14.sp),
-                    filled: true,
-                    fillColor: Pallete.greey.withOpacity(0.3),
-                    border: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.transparent),
-                      borderRadius: BorderRadius.circular(10.r),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.transparent),
-                      borderRadius: BorderRadius.circular(10.r),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.transparent),
-                      borderRadius: BorderRadius.circular(10.r),
-                    ),
-                    contentPadding: EdgeInsets.all(18.w)),
-                // maxLength: 21,
-                maxLines: 7,
-              ),
-
-              // //!
-              50.sbH,
-              isLoading
-                  ? const Loader()
-                  : BButton(
-                      onTap: () {
-                        if (_taskNameController.text.isNotEmpty ||
-                            _descriptionController.text.isNotEmpty) {
-                          ref
-                              .read(taskProjectControllerProvider.notifier)
-                              .createTask(
-                                context: context,
-                                taskName: _taskNameController.text,
-                                projectName: widget.projectName,
-                                employeeId: selectedEmployeeId.value,
-                                description: _descriptionController.text,
-                              );
-                        }
-                      },
-                      width: 200.w,
-                      text: 'Add Task',
-                    ),
-              60.sbH,
-            ],
+                12.sbH,
+                TextField(
+                  // inputFormatters: [
+                  //   FilteringTextInputFormatter.deny(RegExp(' '))
+                  // ],
+                  controller: _taskNameController,
+                  // onChanged: (value) {
+                  //   _nameController.value = TextEditingValue(
+                  //       text: value.toLowerCase(),
+                  //       selection: _nameController.selection);
+                  // },
+                  decoration: InputDecoration(
+                      hintText: 'Task Name',
+                      hintStyle: TextStyle(fontSize: 15.sp),
+                      filled: true,
+                      fillColor: Pallete.greey.withOpacity(0.3),
+                      border: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.transparent),
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.transparent),
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.transparent),
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                      contentPadding: EdgeInsets.all(18.w)),
+                  maxLength: 21,
+                ),
+                20.sbH,
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Task Description',
+                    style: TextStyle(
+                        color: Pallete.blackTint,
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w500),
+                  ),
+                ),
+                12.sbH,
+          
+                //! description
+                TextField(
+                  controller: _descriptionController,
+                  decoration: InputDecoration(
+                      hintText: 'Type something...',
+                      hintStyle: TextStyle(fontSize: 14.sp),
+                      filled: true,
+                      fillColor: Pallete.greey.withOpacity(0.3),
+                      border: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.transparent),
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.transparent),
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.transparent),
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                      contentPadding: EdgeInsets.all(18.w)),
+                  // maxLength: 21,
+                  maxLines: 7,
+                ),
+          
+                // //!
+                50.sbH,
+                isLoading
+                    ? const Loader()
+                    : BButton(
+                        onTap: () {
+                          if (_taskNameController.text.isNotEmpty ||
+                              _descriptionController.text.isNotEmpty) {
+                            ref
+                                .read(taskProjectControllerProvider.notifier)
+                                .createTask(
+                                  context: context,
+                                  taskName: _taskNameController.text,
+                                  projectName: widget.projectName,
+                                  employeeId: selectedEmployeeId.value,
+                                  description: _descriptionController.text,
+                                );
+                          }
+                        },
+                        width: 200.w,
+                        text: 'Add Task',
+                      ),
+                60.sbH,
+              ],
+            ),
           );
         },
         error: (error, stackTrace) => ErrorText(error: error.toString()),

@@ -3,14 +3,35 @@ enum ThemeMode {
   dark,
 }
 
-// enum UserKarma {
-//   comment(1),
-//   textPost(2),
-//   linkPost(3),
-//   imagePost(3),
-//   awardPost(5),
-//   deletePost(-1);
+enum MessageEnum {
+  text('text'),
+  image('image'),
+  audio('audio'),
+  video('video'),
+  gif('gif');
 
-//   final int karma;
-//   const UserKarma(this.karma);
-// }
+  const MessageEnum(this.type);
+  final String type;
+}
+
+// Using an extension
+// Enhanced enums
+
+extension ConvertMessage on String {
+  MessageEnum toEnum() {
+    switch (this) {
+      case 'audio':
+        return MessageEnum.audio;
+      case 'image':
+        return MessageEnum.image;
+      case 'text':
+        return MessageEnum.text;
+      case 'gif':
+        return MessageEnum.gif;
+      case 'video':
+        return MessageEnum.video;
+      default:
+        return MessageEnum.text;
+    }
+  }
+}

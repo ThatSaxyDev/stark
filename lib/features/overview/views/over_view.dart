@@ -98,7 +98,7 @@ class _OverViewState extends ConsumerState<OverView> {
                     ),
                   ),
                   7.sbH,
-                  Align(
+                Align(
                     alignment: Alignment.centerLeft,
                     child: Padding(
                       padding: EdgeInsets.only(left: 20.w),
@@ -297,7 +297,7 @@ class _OverViewState extends ConsumerState<OverView> {
                           return const SizedBox.shrink();
                         },
                         error: (error, stackTrace) =>
-                            ErrorText(error: error.toString()),
+                            ErrorText(error: 'Attendance not opened for today'),
                         loading: () => const Loader(),
                       ),
                   const Spacer(),
@@ -364,10 +364,11 @@ class _OverViewState extends ConsumerState<OverView> {
                             //! doings for the metrics
                             SizedBox(
                               height: 80.h,
+                              // width: 250.w,
                               child: Row(
                                 children: [
                                   Expanded(
-                                    flex: ongoing,
+                                    flex: 1,
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -415,7 +416,7 @@ class _OverViewState extends ConsumerState<OverView> {
                                   ),
                                   8.sbW,
                                   Expanded(
-                                    flex: done,
+                                    flex: 1,
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,

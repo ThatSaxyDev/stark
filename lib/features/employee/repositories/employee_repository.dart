@@ -87,6 +87,12 @@ class EmployeeRepository {
       _organisations.doc(invite.organisationName).update({
         'prospectiveEmployees': FieldValue.arrayRemove([invite.receiverId])
       });
+      _users
+          .doc(invite.receiverId)
+          .update({'organisation': invite.organisationName});
+      _messageGroup.doc(invite.organisationName).update({
+        'membersUid': FieldValue.arrayUnion([invite.receiverId])
+      });
       return right(_organisations.doc(invite.organisationName).update({
         'employees': FieldValue.arrayUnion([invite.receiverId]),
       }));
@@ -147,4 +153,7 @@ class EmployeeRepository {
 
   CollectionReference get _users =>
       _firestore.collection(FirebaseConstants.usersCollection);
+
+  CollectionReference get _messageGroup =>
+      _firestore.collection(FirebaseConstants.messageGroupCollection);
 }

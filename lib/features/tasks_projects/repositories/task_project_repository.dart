@@ -89,6 +89,19 @@ class TaskProjectRepository {
     );
   }
 
+  //! get tasks for an employee
+  Stream<List<TaskModel>> getTasksForEmployee(String employeeId) {
+    return _tasks.where('employeeId', isEqualTo: employeeId).snapshots().map(
+      (event) {
+        List<TaskModel> tasks = [];
+        for (var doc in event.docs) {
+          tasks.add(TaskModel.fromMap(doc.data() as Map<String, dynamic>));
+        }
+        return tasks;
+      },
+    );
+  }
+
   //! get tasks in projects
   Stream<List<TaskModel>> getTasksInProjects(String projectName) {
     return _tasks.where('projectName', isEqualTo: projectName).snapshots().map(

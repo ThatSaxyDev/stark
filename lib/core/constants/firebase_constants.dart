@@ -6,5 +6,5 @@ class FirebaseConstants {
   static const attendanceCollection = 'attendance';
   static const attendanceRecordsCollection = 'attendanceRecords';
   static const projectsCollection = 'projects';
-  static const verificationCollection = 'verifications';
+  static const messageGroupCollection = 'messageGroup';
 }

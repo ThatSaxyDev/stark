@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,12 +21,13 @@ class EmployeeTaskView extends ConsumerStatefulWidget {
 }
 
 class _EmployeeTaskViewState extends ConsumerState<EmployeeTaskView> {
+  
   @override
   Widget build(BuildContext context) {
-    final user = ref.watch(userProvider)!;
-    final invitesStream = ref.watch(getInvitesForEmployeeProvider);
+    // final user = ref.watch(userProvider)!;
     final organisationsStream = ref.watch(getEmployeeOrganisationsProvider);
-    final projectsStream = ref.watch(getProjectsForEmployeesProvider);
+    // final projectsStream = ref.watch(getProjectsForEmployeesProvider);
+    final tasksStream = ref.watch(getTasksForEmployeesProvider);
     return Scaffold(
       appBar: const MyAppBar(
         title: 'Tasks',
@@ -44,6 +47,29 @@ class _EmployeeTaskViewState extends ConsumerState<EmployeeTaskView> {
               ),
             );
           }
+          // return const ErrorText(error: 'E dey org!');
+          return tasksStream.when(
+            data: (tasks) {
+              log(tasks.toString());
+              if (tasks.isEmpty) {
+                return Center(
+                  child: Text(
+                    'You have no ongoing tasks',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Pallete.blackish,
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                );
+              }
+
+              return const ErrorText(error: 'E dey!');
+            },
+            error: (error, stackTrace) => ErrorText(error: error.toString()),
+            loading: () => const Loader(),
+          );
         },
         error: (error, stackTrace) => ErrorText(error: error.toString()),
         loading: () => const Loader(),

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
@@ -19,11 +21,25 @@ final getProjectsForOrganisationsProvider = StreamProvider((ref) {
   return taskProjectController.getProjectsForOrganisation();
 });
 
+//! get projects Emp provider
+final getProjectsForEmpOrganisationsProvider = StreamProvider((ref) {
+  final taskProjectController =
+      ref.watch(taskProjectControllerProvider.notifier);
+  return taskProjectController.getProjectsForEmpOrganisation();
+});
+
 //! get projects for employees provider
 final getProjectsForEmployeesProvider = StreamProvider((ref) {
   final taskProjectController =
       ref.watch(taskProjectControllerProvider.notifier);
   return taskProjectController.getProjectsForEmployee();
+});
+
+//! get tasks for employees provider
+final getTasksForEmployeesProvider = StreamProvider.autoDispose((ref) {
+  final taskProjectController =
+      ref.watch(taskProjectControllerProvider.notifier);
+  return taskProjectController.getTasksForEmployee();
 });
 
 //! get tasks in projects
@@ -205,10 +221,25 @@ class TaskProjectController extends StateNotifier<bool> {
     return _taskProjectRepository.getProjectsForOrganisation(orgName);
   }
 
+  //! get projects per organisation
+  Stream<List<ProjectModel>> getProjectsForEmpOrganisation() {
+    String orgName = '';
+    final ress = _ref.watch(getEmployeeOrganisationsProvider);
+    ress.whenData((organisation) => orgName = organisation[0].name);
+    return _taskProjectRepository.getProjectsForOrganisation(orgName);
+  }
+
   //! get projects for employees
   Stream<List<ProjectModel>> getProjectsForEmployee() {
     final user = _ref.watch(userProvider)!;
+    // log(user.email);
     return _taskProjectRepository.getProjectsForEmployee(user.uid);
+  }
+
+  //! get tasks for an employee
+  Stream<List<TaskModel>> getTasksForEmployee() {
+    final user = _ref.watch(userProvider)!;
+    return _taskProjectRepository.getTasksForEmployee(user.uid);
   }
 
   //! get tasks in projects

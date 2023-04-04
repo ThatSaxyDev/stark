@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:hidden_drawer_menu/hidden_drawer_menu.dart';
 import 'package:stark/features/auth/controllers/auth_controller.dart';
 import 'package:stark/features/employee/views/employee_view.dart';
+import 'package:stark/features/messaging/views/messaging_view.dart';
 import 'package:stark/features/profile/views/profile_view.dart';
 import 'package:stark/features/tasks_projects/views/tasks_view.dart';
 import 'package:stark/features/overview/views/over_view.dart';
@@ -30,6 +31,9 @@ class BaseDrawerWrapper extends StatelessWidget {
             break;
           case 2:
             screenCurrent = const TasksView();
+            break;
+          case 3:
+            screenCurrent = const MessagingView();
             break;
           case 9:
             screenCurrent = const ProfileView();

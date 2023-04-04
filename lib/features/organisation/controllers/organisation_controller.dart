@@ -8,6 +8,7 @@ import 'package:stark/core/providers/storage_repository_provider.dart';
 import 'package:stark/features/auth/controllers/auth_controller.dart';
 import 'package:stark/features/organisation/repositories/organisation_repository.dart';
 import 'package:stark/models/attemdance_model.dart';
+import 'package:stark/models/org_message_model.dart';
 import 'package:stark/models/organisation_model.dart';
 import 'package:stark/utils/snack_bar.dart';
 
@@ -17,8 +18,6 @@ final getOrganisationByNameProvider = StreamProvider.family((ref, String name) {
       .watch(organisationsControllerProvider.notifier)
       .getOrganisationByName(name);
 });
-
-
 
 //! get manager organisations provider
 final getManagerOrganisationsProvider = StreamProvider((ref) {
@@ -60,7 +59,7 @@ class OrganisationController extends StateNotifier<bool> {
         _ref = ref,
         super(false);
 
-  // create community
+  // create organisation
   void createOrganisation(String name, BuildContext context) async {
     state = true;
     final user = _ref.read(userProvider)!;
@@ -74,7 +73,20 @@ class OrganisationController extends StateNotifier<bool> {
       prospectiveEmployees: [],
     );
 
-    final res = await _organisationsRepository.createOrganisation(organisation);
+    OrgMessagingModel orgMessaging = OrgMessagingModel(
+      senderId: user.uid,
+      name: name,
+      groupId: name,
+      lastMessage: '',
+      groupPic: Constants.communityAvatarDefault,
+      membersUid: [user.uid],
+      timeSent: DateTime.now(),
+    );
+
+    _organisationsRepository.createMessageGroup(orgMessaging);
+    final res = await _organisationsRepository.createOrganisation(
+        organisation, user.uid);
+
     state = false;
     res.fold(
       (failure) => showSnackBar(context, failure.message),
@@ -85,7 +97,6 @@ class OrganisationController extends StateNotifier<bool> {
     );
   }
 
-  
   //! get manager organisations
   Stream<List<OrganisationModel>> getManagerOrganisations() {
     final uid = _ref.read(userProvider)!.uid;
@@ -125,59 +136,4 @@ class OrganisationController extends StateNotifier<bool> {
       },
     );
   }
-
-  // //! approve application to create community
-  // void approveApplication(
-  //     BuildContext context, ApplicationModel application) async {
-  //   state = true;
-  //   await _communityRepository.giveApproval(application);
-
-  //   Community community = Community(
-  //     id: application.communityName,
-  //     name: application.communityName,
-  //     banner: Constants.bannerDefault,
-  //     avatar: Constants.communityAvatarDefault,
-  //     members: [application.userId],
-  //     mods: [application.userId],
-  //     description: '',
-  //   );
-  //   final res = await _communityRepository.createCommunity(community);
-  //   state = false;
-  //   res.fold(
-  //     (failure) => showSnackBar(context, failure.message),
-  //     (success) {
-  //       showSnackBar(context, 'Approved');
-  //       // Routemaster.of(context).pop();
-  //     },
-  //   );
-  // }
-
-  // void rejectApplication(
-  //   BuildContext context,
-  //   ApplicationModel application,
-  // ) async {
-  //   state = true;
-  //   final res = await _communityRepository.rejectApplication(application);
-  //   state = false;
-  //   res.fold(
-  //     (failure) => showSnackBar(context, failure.message),
-  //     (success) {
-  //       showSnackBar(context, 'Rejected');
-  //       // Routemaster.of(context).pop();
-  //     },
-  //   );
-  // }
-
-  //! get applications
-  // Stream<List<ApplicationModel>> getPendingAPplications() {
-  //   return _communityRepository.getPendingApplications();
-  // }
-
-  // Stream<List<ApplicationModel>> getApprovedApplications() {
-  //   return _communityRepository.getApprovedApplications();
-  // }
-
-  // Stream<List<ApplicationModel>> getRejectedApplications() {
-  //   return _communityRepository.getRejectedApplications();
-  // }
 }
