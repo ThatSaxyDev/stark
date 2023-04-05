@@ -9,6 +9,8 @@ class UserModel {
   final String email;
   final bool isAdmin;
   final String organisation;
+  final String role;
+  final String phone;
   const UserModel({
     required this.uid,
     required this.firstName,
@@ -17,6 +19,8 @@ class UserModel {
     required this.email,
     required this.isAdmin,
     required this.organisation,
+    required this.role,
+    required this.phone,
   });
 
   UserModel copyWith({
@@ -27,6 +31,8 @@ class UserModel {
     String? email,
     bool? isAdmin,
     String? organisation,
+    String? role,
+    String? phone,
   }) {
     return UserModel(
       uid: uid ?? this.uid,
@@ -36,6 +42,8 @@ class UserModel {
       email: email ?? this.email,
       isAdmin: isAdmin ?? this.isAdmin,
       organisation: organisation ?? this.organisation,
+      role: role ?? this.role,
+      phone: phone ?? this.phone,
     );
   }
 
@@ -48,6 +56,8 @@ class UserModel {
       'email': email,
       'isAdmin': isAdmin,
       'organisation': organisation,
+      'role': role,
+      'phone': phone,
     };
   }
 
@@ -60,6 +70,8 @@ class UserModel {
       email: (map["email"] ?? '') as String,
       isAdmin: (map["isAdmin"] ?? false) as bool,
       organisation: (map["organisation"] ?? '') as String,
+      role: (map["role"] ?? '') as String,
+      phone: (map["phone"] ?? '') as String,
     );
   }
 
@@ -69,7 +81,7 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel(uid: $uid, firstName: $firstName, lastName: $lastName, profilePic: $profilePic, email: $email, isAdmin: $isAdmin, organisation: $organisation)';
+    return 'UserModel(uid: $uid, firstName: $firstName, lastName: $lastName, profilePic: $profilePic, email: $email, isAdmin: $isAdmin, organisation: $organisation, role: $role, phone: $phone)';
   }
 
   @override
@@ -83,7 +95,9 @@ class UserModel {
       other.profilePic == profilePic &&
       other.email == email &&
       other.isAdmin == isAdmin &&
-      other.organisation == organisation;
+      other.organisation == organisation &&
+      other.role == role &&
+      other.phone == phone;
   }
 
   @override
@@ -94,6 +108,8 @@ class UserModel {
       profilePic.hashCode ^
       email.hashCode ^
       isAdmin.hashCode ^
-      organisation.hashCode;
+      organisation.hashCode ^
+      role.hashCode ^
+      phone.hashCode;
   }
 }

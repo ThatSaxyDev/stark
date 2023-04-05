@@ -58,7 +58,10 @@ class EmployeeCard extends ConsumerWidget {
                           ),
                           5.sbH,
                           Text(
-                            'Role', //TODO! update role in the organisation model, add roles and department
+                            employee.role == ''
+                                ? 'Role - - -'
+                                : employee
+                                    .role, //TODO! update role in the organisation model, add roles and department
                             style: TextStyle(
                               color: Pallete.greyColor,
                               fontSize: 14.sp,
@@ -91,33 +94,33 @@ class EmployeeCard extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  13.sbH,
-                  Row(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Department',
-                            style: TextStyle(
-                              color: Pallete.blackish,
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          4.sbH,
-                          Text(
-                            'DEmployee Dpet',
-                            style: TextStyle(
-                              color: Pallete.blackish,
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                  // 13.sbH,
+                  // Row(
+                  //   children: [
+                  //     Column(
+                  //       crossAxisAlignment: CrossAxisAlignment.start,
+                  //       children: [
+                  //         Text(
+                  //           'Department',
+                  //           style: TextStyle(
+                  //             color: Pallete.blackish,
+                  //             fontSize: 12.sp,
+                  //             fontWeight: FontWeight.w600,
+                  //           ),
+                  //         ),
+                  //         4.sbH,
+                  //         Text(
+                  //           'DEmployee Dpet',
+                  //           style: TextStyle(
+                  //             color: Pallete.blackish,
+                  //             fontSize: 14.sp,
+                  //             fontWeight: FontWeight.w400,
+                  //           ),
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ],
+                  // ),
                   25.sbH,
                   Row(
                     children: [
@@ -136,10 +139,10 @@ class EmployeeCard extends ConsumerWidget {
                   10.sbH,
                   Row(
                     children: [
-                      Icon(PhosphorIcons.phone),
+                      const Icon(PhosphorIcons.phone),
                       7.sbW,
                       Text(
-                        '08028068097731',
+                        employee.phone == '' ? '- - - - - -' : employee.phone,
                         style: TextStyle(
                           color: Pallete.blackish,
                           fontSize: 13.sp,

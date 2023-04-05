@@ -155,15 +155,12 @@ class _MenuState extends ConsumerState<Menu> with TickerProviderStateMixin {
                                         ),
                                       ),
                                       5.sbH,
-                                      InkWell(
-                                        onTap: () {},
-                                        child: Text(
-                                          'View Profile',
-                                          style: TextStyle(
-                                            color: Pallete.primaryGreen,
-                                            fontSize: 12.sp,
-                                            fontWeight: FontWeight.w400,
-                                          ),
+                                      Text(
+                                        'View Profile',
+                                        style: TextStyle(
+                                          color: Pallete.primaryGreen,
+                                          fontSize: 12.sp,
+                                          fontWeight: FontWeight.w400,
                                         ),
                                       ),
                                     ],
@@ -229,7 +226,7 @@ List<DrawerItem> drawerItems = [
   DrawerItem('Employees', 'employeee'),
   DrawerItem('Tasks', 'task'),
   DrawerItem('Message', 'message'),
-  DrawerItem('Leave Request', 'request'),
-  DrawerItem('Help center', 'help'),
+  // DrawerItem('Leave Request', 'request'),
+  // DrawerItem('Help center', 'help'),
   // DrawerItem('Settings', 'settings'),
 ];

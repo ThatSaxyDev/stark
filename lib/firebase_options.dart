@@ -50,20 +50,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCu_0DzovkIjbjv4ezipE6CToNw2GlWaNY',
-    appId: '1:1017490435011:android:ab8319644c2cff01b96b76',
-    messagingSenderId: '1017490435011',
-    projectId: 'restark-eab2c',
-    storageBucket: 'restark-eab2c.appspot.com',
+    apiKey: 'AIzaSyDfJc__Wn7SpEGiTU5aELkJ7jfwfOphdRc',
+    appId: '1:297200142197:android:371caf048beb1d838a353c',
+    messagingSenderId: '297200142197',
+    projectId: 'stark-ca0a8',
+    storageBucket: 'stark-ca0a8.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDQe6yUuuxUb-xd78mDFVMpUHEpxFwfgf4',
-    appId: '1:1017490435011:ios:2382c6af94507026b96b76',
-    messagingSenderId: '1017490435011',
-    projectId: 'restark-eab2c',
-    storageBucket: 'restark-eab2c.appspot.com',
-    iosClientId: '1017490435011-joekmni6sma3cl21ckrkkbs52ppkanqb.apps.googleusercontent.com',
+    apiKey: 'AIzaSyC-14p-WLNHI65CwBG9zuQgz1fAyqAhMok',
+    appId: '1:297200142197:ios:0ac7db89bf5e28408a353c',
+    messagingSenderId: '297200142197',
+    projectId: 'stark-ca0a8',
+    storageBucket: 'stark-ca0a8.appspot.com',
+    iosClientId: '297200142197-4ba2iho01ibb55jpefft66r6n1pb07mi.apps.googleusercontent.com',
     iosBundleId: 'com.stark.stark',
   );
 }

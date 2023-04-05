@@ -7,6 +7,7 @@ import 'package:stark/features/auth/views/user_type_view.dart';
 import 'package:stark/features/base_drawer_wrapper/views/base_drawer_wrapper.dart';
 import 'package:stark/features/base_drawer_wrapper/views/employee_base_drawer_wrapper.dart';
 import 'package:stark/features/organisation/views/create_organisation_view.dart';
+import 'package:stark/features/profile/views/edit_profile_view.dart';
 import 'package:stark/features/tasks_projects/views/create_project_view.dart';
 import 'package:stark/features/tasks_projects/views/project_view.dart';
 import 'package:stark/features/tasks_projects/views/task_creation_bottom_sheet.dart';
@@ -46,8 +47,11 @@ final adminLoggedInRoute = RouteMap(
           ),
         ),
     '/create-project': (_) => const MaterialPage(
-      child: CreateProjectView(),
-    ),
+          child: CreateProjectView(),
+        ),
+    '/edit-profile': (_) => const MaterialPage(
+          child: EditProfileView(),
+        ),
   },
   onUnknownRoute: (path) => const MaterialPage(
     child: BaseDrawerWrapper(),
@@ -59,6 +63,9 @@ final employeeLoggedInRoute = RouteMap(
   routes: {
     '/': (_) => const MaterialPage(
           child: EmployeeBaseDrawerWrapper(),
+        ),
+    '/edit-profile': (_) => const MaterialPage(
+          child: EditProfileView(),
         ),
   },
   onUnknownRoute: (path) => const MaterialPage(

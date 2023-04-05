@@ -1,34 +1,41 @@
 {
   "project_info": {
-    "project_number": "1017490435011",
-    "project_id": "restark-eab2c",
-    "storage_bucket": "restark-eab2c.appspot.com"
+    "project_number": "297200142197",
+    "project_id": "stark-ca0a8",
+    "storage_bucket": "stark-ca0a8.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1017490435011:android:ab8319644c2cff01b96b76",
+        "mobilesdk_app_id": "1:297200142197:android:371caf048beb1d838a353c",
         "android_client_info": {
           "package_name": "com.stark.stark"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1017490435011-ab5o8lmifmr5l0565tg9url5e3umr2i3.apps.googleusercontent.com",
+          "client_id": "297200142197-kk0u0so5fnjksiin8np08nakg29kj1oe.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCu_0DzovkIjbjv4ezipE6CToNw2GlWaNY"
+          "current_key": "AIzaSyDfJc__Wn7SpEGiTU5aELkJ7jfwfOphdRc"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1017490435011-ab5o8lmifmr5l0565tg9url5e3umr2i3.apps.googleusercontent.com",
+              "client_id": "297200142197-kk0u0so5fnjksiin8np08nakg29kj1oe.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "297200142197-4ba2iho01ibb55jpefft66r6n1pb07mi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.stark.stark"
+              }
             }
           ]
         }

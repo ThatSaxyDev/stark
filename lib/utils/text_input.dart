@@ -108,6 +108,107 @@ class TextInputBox extends ConsumerWidget {
   }
 }
 
+class TextInputBoxx extends ConsumerWidget {
+  final double? height;
+  final double? width;
+  final String hintText;
+  final TextEditingController controller;
+  final bool obscuretext;
+  final FormFieldValidator<String>? validator;
+  final Widget? suffixIcon;
+  final TextInputType? keyboardType;
+  final int? maxLines;
+  final void Function(String)? onChanged;
+  final void Function()? onTap;
+  final TextInputAction? textInputAction;
+  final void Function(String)? onFieldSubmitted;
+  final Widget icon;
+  const TextInputBoxx({
+    Key? key,
+    this.height,
+    this.width,
+    required this.hintText,
+    required this.controller,
+    this.obscuretext = false,
+    this.validator,
+    this.suffixIcon,
+    this.keyboardType,
+    this.maxLines,
+    this.onChanged,
+    this.onTap,
+    this.textInputAction,
+    this.onFieldSubmitted,
+    required this.icon,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currenTheme = ref.watch(themeNotifierProvider);
+    return SizedBox(
+      height: height,
+      width: width,
+      child: TextFormField(
+        onTap: onTap,
+        onChanged: onChanged,
+        maxLines: maxLines,
+        style: TextStyle(
+          fontSize: 15.sp,
+          color: Pallete.blackTint,
+        ),
+        controller: controller,
+        obscureText: obscuretext,
+        obscuringCharacter: '*',
+        cursorColor: Pallete.blackTint,
+        keyboardType: keyboardType,
+        textInputAction: textInputAction,
+        onFieldSubmitted: onFieldSubmitted,
+        decoration: InputDecoration(
+          // filled: true,
+          // fillColor: currenTheme.backgroundColor,
+          prefixIconConstraints: BoxConstraints(maxHeight: 20.h),
+          prefixIcon: Padding(
+            padding: EdgeInsets.only(left: 18.w, right: 10.w),
+            child: icon,
+          ),
+          contentPadding: EdgeInsets.fromLTRB(24.w, 0, 24.w, 0),
+          helperText: " ",
+          helperStyle: const TextStyle(fontSize: 0.0005),
+          errorStyle: const TextStyle(fontSize: 0.0005),
+          // isDense: true,
+
+          suffixIcon: suffixIcon,
+          // labelText: hintText,
+          // labelStyle: TextStyle(
+          //   fontSize: 14.sp,
+          //   fontWeight: FontWeight.w400,
+          //   color: AppColors.grey3,
+          // ),
+          hintText: hintText,
+
+          hintStyle: TextStyle(
+            fontSize: 15.sp,
+            fontWeight: FontWeight.w400,
+            color: Pallete.textGrey,
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8.r),
+            borderSide: const BorderSide(color: Pallete.borderGrey),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8.r),
+            borderSide: const BorderSide(color: Pallete.borderGrey),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8.r),
+            borderSide: const BorderSide(color: Pallete.borderGrey),
+          ),
+        ),
+        validator: validator,
+      ),
+    );
+  }
+}
+
 // class AltTextInputBox extends StatelessWidget {
 //   final double? height;
 //   final double? width;

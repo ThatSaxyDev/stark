@@ -35,17 +35,17 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
   @override
   void initState() {
     super.initState();
-    _soundRecorder = FlutterSoundRecorder();
+    _soundRecorder = FlutterSoundRecorder(); 
     openAudio();
   }
 
   void openAudio() async {
-    //   final status = await Permission.microphone.request();
-    //   if (status != PermissionStatus.granted) {
-    //     throw RecordingPermissionException('Mic permission not allowed!');
-    //   }
-    //   await _soundRecorder!.openRecorder();
-    //   isRecorderInit = true;
+      final status = await Permission.microphone.request();
+      if (status != PermissionStatus.granted) {
+        throw RecordingPermissionException('Mic permission not allowed!');
+      }
+      await _soundRecorder!.openRecorder();
+      isRecorderInit = true;
   }
 
   void sendTextMessage() async {
@@ -156,8 +156,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
     final isShowMessageReply = messageReply != null;
     return Column(
       children: [
-        isShowMessageReply ? const MessageReplyPreview() :
-        const SizedBox(),
+        isShowMessageReply ? const MessageReplyPreview() : const SizedBox(),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -241,7 +240,11 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
                 backgroundColor: Pallete.blackish.withOpacity(0.7),
                 radius: 22.w,
                 child: GestureDetector(
-                  onTap: sendTextMessage,
+                  onTap: () {
+                    if (_messageController.text.isNotEmpty) {
+                      sendTextMessage();
+                    }
+                  },
                   child: Icon(
                     isShowSendButton
                         ? Icons.send

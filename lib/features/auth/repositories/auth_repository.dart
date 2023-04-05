@@ -56,6 +56,8 @@ class AuthRepository {
           email: userCredential.user!.email ?? email,
           isAdmin: isAdmin,
           organisation: '',
+          role: '',
+          phone: '',
         );
         await _users.doc(userCredential.user!.uid).set(userModel.toMap());
       } else {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
@@ -62,7 +63,13 @@ class _MessagesListViewState extends ConsumerState<MessagesListView> {
             ),
           );
         }
+
+        // SchedulerBinding.instance.addPostFrameCallback((_) {
+        //   messageController.jumpTo(messageController.position.maxScrollExtent);
+        // });
+
         return ListView.builder(
+          physics: const AlwaysScrollableScrollPhysics(),
           controller: messageController,
           itemCount: messages.length,
           itemBuilder: (context, index) {
@@ -95,7 +102,7 @@ class _MessagesListViewState extends ConsumerState<MessagesListView> {
                 message.type,
               ),
               repliedText: message.repliedMessage,
-              username: message.repliedTo,
+              username: message.senderId,
               repliedMessageType: message.repliedMessageType,
             );
           },
