@@ -41,6 +41,7 @@ class _ProjectViewState extends ConsumerState<ProjectView> {
 
   @override
   Widget build(BuildContext context) {
+    final user = ref.watch(userProvider)!;
     String nname = widget.name;
     nname = nname.replaceAll("%20", " ");
 
@@ -59,31 +60,41 @@ class _ProjectViewState extends ConsumerState<ProjectView> {
             data: (tasks) {
               int done = getNumberOfTasksDoneNumber(tasks);
               if (done == tasks.length) {
-                return FloatingActionButton.extended(
-                  backgroundColor: Colors.green.shade900,
-                  onPressed: () {
-                    ref
-                        .read(taskProjectControllerProvider.notifier)
-                        .updatProjectStatusDone(context, nname);
-                  },
-                  label: Row(
-                    children: [
-                      Text(
-                        'Project Done',
-                        style: TextStyle(
-                          color: Pallete.whiteColor,
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      10.sbW,
-                      Icon(
-                        PhosphorIcons.checkBold,
-                        size: 20.sp,
-                      ),
-                    ],
-                  ),
-                );
+                return ref.watch(getProjectProvider(nname)).when(
+                      data: (project) {
+                        if (project.managerId != user.uid) {
+                          return const SizedBox.shrink();
+                        }
+
+                        return FloatingActionButton.extended(
+                          backgroundColor: Colors.green.shade900,
+                          onPressed: () {
+                            ref
+                                .read(taskProjectControllerProvider.notifier)
+                                .updatProjectStatusDone(context, nname);
+                          },
+                          label: Row(
+                            children: [
+                              Text(
+                                'Project Done',
+                                style: TextStyle(
+                                  color: Pallete.whiteColor,
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              10.sbW,
+                              Icon(
+                                PhosphorIcons.checkBold,
+                                size: 20.sp,
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                      error: (error, stactrace) => const SizedBox.shrink(),
+                      loading: () => const SizedBox.shrink(),
+                    );
               }
               return const SizedBox.shrink();
             },
@@ -102,35 +113,45 @@ class _ProjectViewState extends ConsumerState<ProjectView> {
               fontWeight: FontWeight.bold),
         ),
         actions: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: BButton(
-              width: 40.w,
-              height: 30.h,
-              radius: 10.r,
-              color: Pallete.primaryGreen,
-              onTap: () {
-                showModalBottomSheet(
-                  isScrollControlled: true,
-                  backgroundColor: Colors.transparent,
-                  context: context,
-                  builder: (context) => Padding(
-                    padding: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).viewInsets.bottom),
-                    child: Wrap(
-                      children: [
-                        TaskCreationBottomSheet(
-                          projectName: nname,
-                        ),
-                      ],
+          ref.watch(getProjectProvider(nname)).when(
+                data: (project) {
+                  if (project.managerId != user.uid) {
+                    return const SizedBox.shrink();
+                  }
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: BButton(
+                      width: 40.w,
+                      height: 30.h,
+                      radius: 10.r,
+                      color: Pallete.primaryGreen,
+                      onTap: () {
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          context: context,
+                          builder: (context) => Padding(
+                            padding: EdgeInsets.only(
+                                bottom:
+                                    MediaQuery.of(context).viewInsets.bottom),
+                            child: Wrap(
+                              children: [
+                                TaskCreationBottomSheet(
+                                  projectName: nname,
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                      isText: false,
+                      item: const Icon(Icons.add),
                     ),
-                  ),
-                );
-              },
-              isText: false,
-              item: const Icon(Icons.add),
-            ),
-          ),
+                  );
+                },
+                error: (error, stactrace) => const SizedBox.shrink(),
+                loading: () => const SizedBox.shrink(),
+              ),
         ],
       ),
       body: ref.watch(getProjectProvider(nname)).when(
@@ -247,7 +268,9 @@ class _ProjectViewState extends ConsumerState<ProjectView> {
                                   data: (employee) {
                                     return Center(
                                       child: Text(
-                                        '${employee.firstName} ${employee.lastName}',
+                                        employee.uid == user.uid
+                                            ? 'You'
+                                            : '${employee.firstName} ${employee.lastName}',
                                         style: TextStyle(
                                           color: Pallete.whiteColor,
                                           fontSize: 14.sp,
@@ -433,39 +456,42 @@ class _ProjectViewState extends ConsumerState<ProjectView> {
                                                     fontWeight: FontWeight.w500,
                                                   ),
                                                 ),
-                                                InkWell(
-                                                  onTap: () {
-                                                    ref
-                                                        .read(
-                                                            taskProjectControllerProvider
-                                                                .notifier)
-                                                        .updateTaskStatusDone(
-                                                            context,
-                                                            task.taskName);
-                                                  },
-                                                  child: Container(
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            horizontal: 7.w,
-                                                            vertical: 5.h),
-                                                    decoration: BoxDecoration(
-                                                        color: Colors.green,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                    10.r)),
-                                                    child: Text(
-                                                      'Done ?',
-                                                      style: TextStyle(
-                                                        color:
-                                                            Pallete.whiteColor,
-                                                        fontSize: 16.sp,
-                                                        fontWeight:
-                                                            FontWeight.w500,
+                                                if (task.employeeId ==
+                                                        user.uid ||
+                                                    task.managerId == user.uid)
+                                                  InkWell(
+                                                    onTap: () {
+                                                      ref
+                                                          .read(
+                                                              taskProjectControllerProvider
+                                                                  .notifier)
+                                                          .updateTaskStatusDone(
+                                                              context,
+                                                              task.taskName);
+                                                    },
+                                                    child: Container(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              horizontal: 7.w,
+                                                              vertical: 5.h),
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.green,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10.r)),
+                                                      child: Text(
+                                                        'Done ?',
+                                                        style: TextStyle(
+                                                          color: Pallete
+                                                              .whiteColor,
+                                                          fontSize: 16.sp,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
-                                                ),
                                               ],
                                             ),
                                             20.sbH,
@@ -491,8 +517,11 @@ class _ProjectViewState extends ConsumerState<ProjectView> {
                                                           ),
                                                           children: [
                                                             TextSpan(
-                                                              text: employee
-                                                                  .firstName,
+                                                              text: task.employeeId ==
+                                                                      user.uid
+                                                                  ? 'You'
+                                                                  : employee
+                                                                      .firstName,
                                                               style: TextStyle(
                                                                 color: Pallete
                                                                     .blackColor,
@@ -579,39 +608,42 @@ class _ProjectViewState extends ConsumerState<ProjectView> {
                                                     fontWeight: FontWeight.w500,
                                                   ),
                                                 ),
-                                                InkWell(
-                                                  onTap: () {
-                                                    ref
-                                                        .read(
-                                                            taskProjectControllerProvider
-                                                                .notifier)
-                                                        .updateTaskStatusProgress(
-                                                            context,
-                                                            task.taskName);
-                                                  },
-                                                  child: Container(
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            horizontal: 7.w,
-                                                            vertical: 5.h),
-                                                    decoration: BoxDecoration(
-                                                        color: Colors.red,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                    10.r)),
-                                                    child: Text(
-                                                      'Remove ?',
-                                                      style: TextStyle(
-                                                        color:
-                                                            Pallete.whiteColor,
-                                                        fontSize: 16.sp,
-                                                        fontWeight:
-                                                            FontWeight.w500,
+                                                if (task.employeeId ==
+                                                        user.uid ||
+                                                    task.managerId == user.uid)
+                                                  InkWell(
+                                                    onTap: () {
+                                                      ref
+                                                          .read(
+                                                              taskProjectControllerProvider
+                                                                  .notifier)
+                                                          .updateTaskStatusProgress(
+                                                              context,
+                                                              task.taskName);
+                                                    },
+                                                    child: Container(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              horizontal: 7.w,
+                                                              vertical: 5.h),
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.red,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10.r)),
+                                                      child: Text(
+                                                        'Remove ?',
+                                                        style: TextStyle(
+                                                          color: Pallete
+                                                              .whiteColor,
+                                                          fontSize: 16.sp,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
-                                                ),
                                               ],
                                             ),
                                             20.sbH,
@@ -637,8 +669,11 @@ class _ProjectViewState extends ConsumerState<ProjectView> {
                                                           ),
                                                           children: [
                                                             TextSpan(
-                                                              text: employee
-                                                                  .firstName,
+                                                              text: task.employeeId ==
+                                                                      user.uid
+                                                                  ? 'You'
+                                                                  : employee
+                                                                      .firstName,
                                                               style: TextStyle(
                                                                 color: Pallete
                                                                     .blackColor,

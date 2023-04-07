@@ -94,32 +94,39 @@ class EmployeeView extends ConsumerWidget {
                     children: [
                       15.sbH,
                       //! search box
-                      Container(
-                        height: 50.h,
-                        width: double.infinity,
-                        padding: EdgeInsets.symmetric(horizontal: 20.w),
-                        decoration: BoxDecoration(
-                            color: Pallete.whiteColor,
-                            borderRadius: BorderRadius.circular(10.r),
-                            border: Border.all(color: Pallete.greey)),
-                        child: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Search...',
-                                style: TextStyle(
-                                  color: Pallete.greey,
-                                  fontSize: 15.sp,
-                                  fontWeight: FontWeight.w400,
+                      InkWell(
+                        onTap: () {
+                          showSearch(
+                              context: context,
+                              delegate: InviteEmployeesSearchDelegate(ref));
+                        },
+                        child: Container(
+                          height: 50.h,
+                          width: double.infinity,
+                          padding: EdgeInsets.symmetric(horizontal: 20.w),
+                          decoration: BoxDecoration(
+                              color: Pallete.whiteColor,
+                              borderRadius: BorderRadius.circular(10.r),
+                              border: Border.all(color: Pallete.greey)),
+                          child: Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Search...',
+                                  style: TextStyle(
+                                    color: Pallete.greey,
+                                    fontSize: 15.sp,
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 ),
-                              ),
-                              Icon(
-                                PhosphorIcons.magnifyingGlass,
-                                color: Pallete.greey,
-                                size: 20.sp,
-                              ),
-                            ],
+                                Icon(
+                                  PhosphorIcons.magnifyingGlass,
+                                  color: Pallete.greey,
+                                  size: 20.sp,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -137,29 +144,29 @@ class EmployeeView extends ConsumerWidget {
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                          InkWell(
-                            onTap: () {
-                              showSearch(
-                                  context: context,
-                                  delegate: InviteEmployeesSearchDelegate(ref));
-                            },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 5.w, vertical: 3.h),
-                              decoration: BoxDecoration(
-                                color: Pallete.primaryGreen,
-                                borderRadius: BorderRadius.circular(5.r),
-                              ),
-                              child: Text(
-                                '+ Add Employee',
-                                style: TextStyle(
-                                  color: Pallete.whiteColor,
-                                  fontSize: 12.sp,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          ),
+                          // InkWell(
+                          //   onTap: () {
+                          //     showSearch(
+                          //         context: context,
+                          //         delegate: InviteEmployeesSearchDelegate(ref));
+                          //   },
+                          //   child: Container(
+                          //     padding: EdgeInsets.symmetric(
+                          //         horizontal: 5.w, vertical: 3.h),
+                          //     decoration: BoxDecoration(
+                          //       color: Pallete.primaryGreen,
+                          //       borderRadius: BorderRadius.circular(5.r),
+                          //     ),
+                          //     child: Text(
+                          //       '+ Add Employee',
+                          //       style: TextStyle(
+                          //         color: Pallete.whiteColor,
+                          //         fontSize: 12.sp,
+                          //         fontWeight: FontWeight.w500,
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
                         ],
                       ),
                       Expanded(

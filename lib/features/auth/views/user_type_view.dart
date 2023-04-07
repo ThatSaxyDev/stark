@@ -13,7 +13,6 @@ class SelectUserTypeView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     //! navigation
     void navigateToSignUp(BuildContext context, String type) {
       Routemaster.of(context).push('/sign-up/$type');
@@ -29,7 +28,17 @@ class SelectUserTypeView extends ConsumerWidget {
             Container(
               height: height(context),
               width: MediaQuery.of(context).size.width,
-              color: Colors.white,
+              color: const Color.fromARGB(255, 244, 237, 237),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  60.sbH,
+                  Image.asset(
+                    'starkiconntransparent'.png,
+                    height: 300.h,
+                  ),
+                ],
+              ),
             ),
 
             //! glasssmorph
@@ -51,6 +60,7 @@ class SelectUserTypeView extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    20.sbH,
                     Text(
                       'Let\'s Get Started!',
                       style: TextStyle(
@@ -59,28 +69,28 @@ class SelectUserTypeView extends ConsumerWidget {
                         color: Pallete.blackTint,
                       ),
                     ),
-                    13.sbH,
-                    RichText(
-                      text: TextSpan(
-                        text:
-                            'Explore your mates for gowth of your knowledge and ',
-                        style: TextStyle(
-                          color: Pallete.textGrey,
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        children: [
-                          TextSpan(
-                            text: 'personality',
-                            style: TextStyle(
-                              color: Pallete.primaryGreen,
-                              fontSize: 15.sp,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    // 13.sbH,
+                    // RichText(
+                    //   text: TextSpan(
+                    //     text:
+                    //         'Explore your mates for gowth of your knowledge and ',
+                    //     style: TextStyle(
+                    //       color: Pallete.textGrey,
+                    //       fontSize: 14.sp,
+                    //       fontWeight: FontWeight.w400,
+                    //     ),
+                    //     children: [
+                    //       TextSpan(
+                    //         text: 'personality',
+                    //         style: TextStyle(
+                    //           color: Pallete.primaryGreen,
+                    //           fontSize: 15.sp,
+                    //           fontWeight: FontWeight.w500,
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
                     const Spacer(),
 
                     //! buttons
@@ -127,7 +137,7 @@ class SelectUserTypeView extends ConsumerWidget {
                     10.sbH,
                     //! employee
                     BButton(
-                       onTap: () => navigateToSignUp(context, 'employee'),
+                      onTap: () => navigateToSignUp(context, 'employee'),
                       height: 95.h,
                       isText: false,
                       color: Pallete.whiteColor,
@@ -153,7 +163,7 @@ class SelectUserTypeView extends ConsumerWidget {
                               SizedBox(
                                 width: 200.w,
                                 child: Text(
-                                  'Welcome to time in get an invitation link from admin to join the company.',
+                                  'Join your organisation, be punctual, update your task progress!',
                                   style: TextStyle(
                                     fontSize: 11.sp,
                                     fontWeight: FontWeight.w400,

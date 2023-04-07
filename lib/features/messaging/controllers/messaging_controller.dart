@@ -9,8 +9,7 @@ import 'package:stark/models/message_model.dart';
 
 //! get messages stream provider
 final getGroupChatStreamProvider = StreamProvider.autoDispose((ref) {
-  final messagingController =
-      ref.watch(messagingControllerProvider.notifier);
+  final messagingController = ref.watch(messagingControllerProvider.notifier);
   return messagingController.getGroupChatStream();
 });
 
@@ -41,10 +40,10 @@ class MessagingController extends StateNotifier<bool> {
         super(false);
 
   //! get message streams
-   Stream<List<MessageModel>> getGroupChatStream() {
+  Stream<List<MessageModel>> getGroupChatStream() {
     final user = _ref.read(userProvider)!;
     return _messagingRepository.getGroupChatStream(user.organisation);
-   }
+  }
 
   //! send text message (manager)
   void sendTextMessageManager({
@@ -59,8 +58,9 @@ class MessagingController extends StateNotifier<bool> {
     _messagingRepository.sendTextMessage(
       text: text,
       orgName: user.organisation,
-      senderUserName: user.lastName,
+      senderUserName: '${user.firstName} ${user.lastName}',
       messageReply: messageReply,
+      senderProfilePic: user.profilePic,
     );
 
     state = false;

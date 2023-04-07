@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:stark/features/attendance/controllers/attendance_controller.dart';
 import 'package:stark/features/auth/controllers/auth_controller.dart';
 import 'package:stark/features/employee/controllers/employee_controller.dart';
 import 'package:stark/features/employee/widgets/employee_invite_tile.dart';
@@ -147,6 +148,134 @@ class _EmployeeOverViewState extends ConsumerState<EmployeeOverView> {
                   ),
                 ),
               ),
+              20.sbH,
+              ref.watch(getAttendanceRecordListProvider).when(
+                    data: (attendanceRecords) {
+                      int presentCount = attendanceRecords
+                          .where((record) => record.present.contains(user.uid))
+                          .length;
+
+                      int absentCount = attendanceRecords
+                          .where((record) => record.absent.contains(user.uid))
+                          .length;
+
+                      int earlyCount = attendanceRecords
+                          .where((record) => record.early.contains(user.uid))
+                          .length;
+
+                      int lateCount = attendanceRecords
+                          .where((record) => record.late.contains(user.uid))
+                          .length;
+
+                      return Column(
+                        children: [
+                          Text(
+                            attendanceRecords.length == 1
+                                ? '${attendanceRecords.length} work day'
+                                : '${attendanceRecords.length} work days',
+                            style: TextStyle(
+                              color: Pallete.blackColor,
+                              fontSize: 15.sp,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          10.sbH,
+                          Padding(
+                            padding: 35.padH,
+                            child: Row(
+                              children: [
+                                //! present
+                                Row(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 5.w,
+                                      backgroundColor: Colors.green,
+                                    ),
+                                    10.sbW,
+                                    Text(
+                                      'Present $presentCount',
+                                      style: TextStyle(
+                                        color: Pallete.blackColor,
+                                        fontSize: 15.sp,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const Spacer(),
+                                //! early
+                                Row(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 5.w,
+                                      backgroundColor: Colors.purple,
+                                    ),
+                                    10.sbW,
+                                    Text(
+                                      'Early $earlyCount',
+                                      style: TextStyle(
+                                        color: Pallete.blackColor,
+                                        fontSize: 15.sp,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          32.sbH,
+                          Padding(
+                            padding: 35.padH,
+                            child: Row(
+                              children: [
+                                //! present
+                                Row(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 5.w,
+                                      backgroundColor: Colors.red,
+                                    ),
+                                    10.sbW,
+                                    Text(
+                                      'Absent $absentCount',
+                                      style: TextStyle(
+                                        color: Pallete.blackColor,
+                                        fontSize: 15.sp,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const Spacer(),
+                                //! early
+                                Row(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 5.w,
+                                      backgroundColor: Colors.orange,
+                                    ),
+                                    10.sbW,
+                                    Text(
+                                      'Late $lateCount',
+                                      style: TextStyle(
+                                        color: Pallete.blackColor,
+                                        fontSize: 15.sp,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                    error: (error, stackTrace) =>
+                        ErrorText(error: 'Attendance not opened for today'),
+                    loading: () => const Loader(),
+                  ),
             ],
           );
         },

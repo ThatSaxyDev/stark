@@ -228,7 +228,7 @@ List<DrawerItem> drawerItems = [
   DrawerItem('Attendance', 'overview'),
   DrawerItem('Tasks', 'task'),
   DrawerItem('Message', 'message'),
-  DrawerItem('Leave Request', 'request'),
-  DrawerItem('Help center', 'help'),
+  // DrawerItem('Leave Request', 'request'),
+  // DrawerItem('Help center', 'help'),
   // DrawerItem('Settings', 'settings'),
 ];

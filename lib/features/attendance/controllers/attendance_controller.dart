@@ -24,10 +24,9 @@ final getAttendanceRecordProvider = StreamProvider((ref) {
 });
 
 //! provider to get attendance records list
-final getAttendanceRecordListProvider =
-    StreamProvider.family((ref, DateTime date) {
+final getAttendanceRecordListProvider = StreamProvider((ref) {
   final attendanceController = ref.watch(attendanceControllerProvider.notifier);
-  return attendanceController.getListAttendanceRecords(date);
+  return attendanceController.getListAttendanceRecords();
 });
 
 //! provider to get signed attendance
@@ -149,11 +148,11 @@ class AttendanceController extends StateNotifier<bool> {
   }
 
   //! get attendance record for partiular days
-  Stream<List<AttendanceRecordModel>> getListAttendanceRecords(DateTime date) {
+  Stream<List<AttendanceRecordModel>> getListAttendanceRecords() {
     String orgName = '';
-    final ress = _ref.watch(getManagerOrganisationsProvider);
+    final ress = _ref.watch(getEmployeeOrganisationsProvider);
     ress.whenData((organisation) => orgName = organisation[0].name);
-    return _attendanceRepository.getListAttendanceRecords(orgName, date);
+    return _attendanceRepository.getListAttendanceRecords(orgName);
   }
 
   //! get attendance signed stream

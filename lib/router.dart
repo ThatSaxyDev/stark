@@ -67,6 +67,11 @@ final employeeLoggedInRoute = RouteMap(
     '/edit-profile': (_) => const MaterialPage(
           child: EditProfileView(),
         ),
+    '/project/:name': (routeData) => MaterialPage(
+          child: ProjectView(
+            name: routeData.pathParameters['name']!,
+          ),
+        ),
   },
   onUnknownRoute: (path) => const MaterialPage(
     child: EmployeeBaseDrawerWrapper(),

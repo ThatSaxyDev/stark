@@ -36,7 +36,7 @@ final getProjectsForEmployeesProvider = StreamProvider((ref) {
 });
 
 //! get tasks for employees provider
-final getTasksForEmployeesProvider = StreamProvider.autoDispose((ref) {
+final getTasksForEmployeesProvider = StreamProvider((ref) {
   final taskProjectController =
       ref.watch(taskProjectControllerProvider.notifier);
   return taskProjectController.getTasksForEmployee();

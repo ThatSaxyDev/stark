@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -56,7 +57,10 @@ class UserProfileController extends StateNotifier<bool> {
       );
       res.fold(
         (l) => showSnackBar(context, l.message),
-        (profilePicUrl) => profilePhoto = profilePicUrl,
+        (profilePicUrl) {
+          profilePhoto = profilePicUrl;
+          log(profilePhoto);
+        },
         // (r) => user = user.copyWith(profilePic: r),
       );
     }

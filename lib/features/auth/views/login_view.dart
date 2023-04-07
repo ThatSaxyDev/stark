@@ -93,7 +93,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                     //! last name input
                     TextInputBox(
                       height: 47.h,
-                      hintText: 'Confirm Password',
+                      hintText: 'Password',
                       controller: _passwordController,
                       icon: 'password_icon',
                     ),

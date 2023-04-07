@@ -71,27 +71,27 @@ class EmployeeCard extends ConsumerWidget {
                         ],
                       ),
                       const Spacer(),
-                      IconButton(
-                        onPressed: () {
-                          showModalBottomSheet(
-                            isScrollControlled: true,
-                            backgroundColor: Colors.transparent,
-                            context: context,
-                            builder: (context) => Wrap(
-                              children: [
-                                RemoveEmployeeBottomSheet(
-                                  employeeFirstName: employee.firstName,
-                                  orgaName: orgaName,
-                                )
-                              ],
-                            ),
-                          );
-                        },
-                        icon: const Icon(
-                          PhosphorIcons.signOutBold,
-                          color: Pallete.thickRed,
-                        ),
-                      ),
+                      // IconButton(
+                      //   onPressed: () {
+                      //     showModalBottomSheet(
+                      //       isScrollControlled: true,
+                      //       backgroundColor: Colors.transparent,
+                      //       context: context,
+                      //       builder: (context) => Wrap(
+                      //         children: [
+                      //           RemoveEmployeeBottomSheet(
+                      //             employeeFirstName: employee.firstName,
+                      //             orgaName: orgaName,
+                      //           )
+                      //         ],
+                      //       ),
+                      //     );
+                      //   },
+                      //   icon: const Icon(
+                      //     PhosphorIcons.signOutBold,
+                      //     color: Pallete.thickRed,
+                      //   ),
+                      // ),
                     ],
                   ),
                   // 13.sbH,

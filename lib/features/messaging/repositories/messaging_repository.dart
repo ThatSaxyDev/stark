@@ -52,6 +52,7 @@ class MessagingRepository {
     required String orgName,
     required String senderUserName,
     required MessageReply? messageReply,
+    required String senderProfilePic,
   }) async {
     try {
       var timeSent = DateTime.now();
@@ -63,11 +64,11 @@ class MessagingRepository {
           text: text,
           timeSent: timeSent,
           messageId: messageId,
-          // username: username,
           messageType: MessageEnum.text,
           messageReply: messageReply,
           senderUsername: senderUserName,
           recieverUserName: orgName,
+          senderProfilePic: senderProfilePic,
         ),
       );
     } on FirebaseException catch (e) {
@@ -82,13 +83,15 @@ class MessagingRepository {
     required String text,
     required DateTime timeSent,
     required String messageId,
-    // required String username,
+    required String senderProfilePic,
     required MessageEnum messageType,
     required MessageReply? messageReply,
     required String senderUsername,
     required String? recieverUserName,
   }) async {
     final message = MessageModel(
+      senderProfilePic: senderProfilePic,
+      senderUsername: senderUsername,
       senderId: _auth.currentUser!.uid,
       recieverid: orgName,
       text: text,

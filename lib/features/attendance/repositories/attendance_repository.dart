@@ -177,10 +177,9 @@ class AttendanceRepository {
 
   //! get attendance record for partiular days
   Stream<List<AttendanceRecordModel>> getListAttendanceRecords(
-      String orgName, DateTime date) {
+      String orgName) {
     return _attendanceRecords
         .where('organisationName', isEqualTo: orgName)
-        .where('date', isEqualTo: date)
         .snapshots()
         .map(
       (event) {
